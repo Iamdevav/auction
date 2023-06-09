@@ -57,7 +57,7 @@ const Bidder = () => {
     setShowBidderModal(false);
   };
   return (
-    <div className="container" style={{ marginTop: "100px" }}>
+    <div className="container" style={{ marginTop: "110px" }}>
       <Card>
         <Card.Body>
           <Card.Title>Bidder</Card.Title>
