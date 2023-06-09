@@ -57,7 +57,7 @@ const Bidder = () => {
     setShowBidderModal(false);
   };
   return (
-    <div>
+    <div className="container" style={{ marginTop: "100px" }}>
       <Card>
         <Card.Body>
           <Card.Title>Bidder</Card.Title>
@@ -125,12 +125,14 @@ const Bidder = () => {
                   auctions.length > 0 && bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
-                    bidders[bidders.length - 1].amount + 100
+                        bidders[bidders.length - 1].amount + 100
                 )
               }
-              disabled={auctions.length === 0 ? true :
-                bidders.length > 0 &&
-                bidders[bidders.length - 1].name === currentUser?.name
+              disabled={
+                auctions.length === 0
+                  ? true
+                  : bidders.length > 0 &&
+                    bidders[bidders.length - 1].name === currentUser?.name
               }
             >
               You Paid {bidAmount}
@@ -151,7 +153,11 @@ const Bidder = () => {
             >
               +1000
             </Button>
-            <Button variant="danger" onClick={() => console.log(bidAmount)} disabled={auctions.length === 0 && true}>
+            <Button
+              variant="danger"
+              onClick={() => console.log(bidAmount)}
+              disabled={auctions.length === 0 && true}
+            >
               Reset
             </Button>
           </Form>
