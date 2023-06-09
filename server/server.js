@@ -147,7 +147,6 @@ app.post(`${PREFIX}/bids`, (req, res) => {
     });
   }
   bid.id = ++bidId;
-  bids.push(bid);
   auction.current_price = bid.amount;
   auction.high_bidder_id = bid.user_id;
   notifyWssByAuction(bid.auction_id);

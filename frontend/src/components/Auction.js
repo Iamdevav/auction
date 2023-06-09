@@ -1,222 +1,269 @@
 import React, { useEffect, useState } from "react";
 import {
-  Card,
-  Button,
-  Form,
-  Modal,
-  Row,
-  Col,
-  Container,
+    Card,
+    Button,
+    Form,
+    Modal,
+    Row,
+    Col,
+    Container,
 } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { createAuction, login } from "../action";
+import { createAuction, createBid, getAuction, getBids, login } from "../action";
 
 const Auction = () => {
-  const [auctioneerName, setAuctioneerName] = useState("");
-  const [bidderName, setBidderName] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [itemName, setItemName] = useState("");
-  const [startingPrice, setStartingPrice] = useState("");
-  const [userType, setUserType] = useState();
-  const [showBidderModal, setShowBidderModal] = useState(false);
+    const [auctioneerName, setAuctioneerName] = useState("");
+    const [bidderName, setBidderName] = useState("");
+    const [showModal, setShowModal] = useState(false);
+    const [itemName, setItemName] = useState("");
+    const [startingPrice, setStartingPrice] = useState("");
+    const [userType, setUserType] = useState();
+    const [showBidderModal, setShowBidderModal] = useState(false);
+    const [auctions, setAuctions] = useState([])
+    const [bidders, setBidders] = useState([])
+    const [bidAmount, setBidAmount] = useState()
+    const [addAmount, setAddAmount] = useState()
 
-  const dispatch = useDispatch();
+    const currentUser = JSON.parse(localStorage.getItem('users'))
 
-  useEffect(() => {}, []);
+    const dispatch = useDispatch();
 
-  const handleAuctioneerSubmit = (event) => {
-    event.preventDefault();
-    let data;
-    if (auctioneerName) {
-      setUserType("Auctioneer");
-      data = {
-        name: auctioneerName,
-        userType: "Auctioneer",
-      };
-    } else {
-      setUserType("Bidder");
-      data = {
-        name: bidderName,
-        userType: "Biddder",
-      };
-    }
-    dispatch(login(data));
-    setAuctioneerName("");
-    setBidderName("");
-    setShowModal(true);
-  };
+    useEffect(() => {
+        async function getAuctionData() {
+            setAuctions(await dispatch(getAuction()))
+            setBidders(await dispatch(getBids()))
+        }
+        getAuctionData()
+    }, [])
 
-  const handleModalSubmit = (event) => {
-    event.preventDefault();
-    console.log("Item Name:", itemName);
-    console.log("Starting Price:", startingPrice);
-    const data = {
-      name: itemName,
-      price: startingPrice,
+    const handleAuctioneerSubmit = (event) => {
+        event.preventDefault();
+        setUserType("Auctioneer");
+        const data = {
+            name: auctioneerName,
+            userType: "Auctioneer",
+        };
+        dispatch(login(data));
+        setShowModal(true);
     };
-    dispatch(createAuction(data));
 
-    setItemName("");
-    setStartingPrice("");
-  };
+    const handleModalSubmit = (event) => {
+        event.preventDefault();
+        console.log("Item Name:", itemName);
+        console.log("Starting Price:", startingPrice);
+        const data = {
+            name: itemName,
+            price: startingPrice,
+        };
+        dispatch(createAuction(data));
 
-  const handleModalClose = () => {
-    setShowModal(false);
-  };
-  const handleBidderSubmit = (event) => {
-    event.preventDefault();
-    setShowBidderModal(true);
-  };
-  const handlebidderModalSubmit = (event) => {
-    event.preventDefault();
-  };
-  const handlebidderModalClose = () => {
-    setShowBidderModal(false);
-  };
+        setItemName("");
+        setStartingPrice("");
+    };
 
-  return (
-    <Container>
-      <div>
-        <Row>
-          <Col>
-            <Card>
-              <Card.Body>
-                <Card.Title>Auctioneer</Card.Title>
-                <Form onSubmit={handleAuctioneerSubmit}>
-                  <Form.Group controlId="auctioneerName" className="mb-3">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter name"
-                      value={auctioneerName}
-                      onChange={(event) =>
-                        setAuctioneerName(event.target.value)
-                      }
-                    />
-                  </Form.Group>
-                  <Button variant="primary" type="submit">
-                    Submit
-                  </Button>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col>
-            <Card>
-              <Card.Body>
-                <Card.Title>Bidder</Card.Title>
-                <Form onSubmit={handleBidderSubmit}>
-                  <Form.Group controlId="auctioneerName" className="mb-3">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter name"
-                      value={auctioneerName}
-                      onChange={(event) =>
-                        setAuctioneerName(event.target.value)
-                      }
-                    />
-                  </Form.Group>
-                  <Button variant="primary" type="submit">
-                    Submit
-                  </Button>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+    const handleModalClose = () => {
+        setShowModal(false);
+    };
+    const handleBidderSubmit = (event) => {
+        event.preventDefault();
+        if (bidderName) {
+            setUserType("Bidder");
+            const data = {
+                name: bidderName,
+                userType: "Biddder",
+            };
+            dispatch(login(data));
+            setShowBidderModal(true);
+            setBidAmount((auctions.length > 0 && bidders.length === 0) ? parseInt(auctions[0].price) + 100 : bidders.length > 0 && bidders[bidders.length - 1].amount + 100)
+        }
+    };
+    const handlebidderModalSubmit = (event, bidPrice) => {
+        event.preventDefault();
+        const data = {
+            auction_id: auctions.length > 0 && auctions[0].id,
+            amount: bidPrice,
+            name: bidderName
+        }
+        dispatch(createBid(data))
 
-        {userType === "Auctioneer" && (
-          <Modal
-            show={showModal}
-            onHide={handleModalClose}
-            //   style={{ height: "500vh" }}
-          >
-            <Modal.Header closeButton>
-              <Modal.Title>Enter Item Details</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group controlId="itemName">
-                  <Form.Label>Auction Name</Form.Label>
-                </Form.Group>
-                <Form.Group controlId="itemName">
-                  <Form.Label>Item Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter item name"
-                    value={itemName}
-                    onChange={(event) => setItemName(event.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="startingPrice" className="mb-3">
-                  <Form.Label>Starting Price</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Enter starting price"
-                    value={startingPrice}
-                    onChange={(event) => setStartingPrice(event.target.value)}
-                  />
-                </Form.Group>
+    };
+    const handlebidderModalClose = () => {
+        setShowBidderModal(false);
+    };
 
-                <Button
-                  variant="primary"
-                  type="submit"
-                  onClick={handleModalSubmit}
-                >
-                  Submit
-                </Button>
-                <hr />
-                <p> current price</p>
-                <Row className="gx-0">
-                  <Col>
-                    <p>Bidder Name:</p>
-                  </Col>
-                  <Col>
-                    <p>$XXX</p>{" "}
-                  </Col>
+    return (
+        <Container>
+            <div>
+                <Row>
+                    <Col>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Auctioneer</Card.Title>
+                                <Form onSubmit={handleAuctioneerSubmit}>
+                                    <Form.Group controlId="auctioneerName" className="mb-3">
+                                        <Form.Label>Name</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Enter name"
+                                            value={auctioneerName}
+                                            onChange={(event) =>
+                                                setAuctioneerName(event.target.value)
+                                            }
+                                        />
+                                    </Form.Group>
+                                    <Button variant="primary" type="submit" >
+                                        Submit
+                                    </Button>
+                                </Form>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Bidder</Card.Title>
+                                <Form onSubmit={handleBidderSubmit}>
+                                    <Form.Group controlId="auctioneerName" className="mb-3">
+                                        <Form.Label>Name</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Enter name"
+                                            value={bidderName}
+                                            onChange={(event) =>
+                                                setBidderName(event.target.value)
+                                            }
+                                        />
+                                    </Form.Group>
+                                    <Button variant="primary" type="submit">
+                                        Submit
+                                    </Button>
+                                </Form>
+                            </Card.Body>
+                        </Card>
+                    </Col>
                 </Row>
-              </Form>
-            </Modal.Body>
-          </Modal>
-        )}
-        <Modal
-          show={showBidderModal}
-          onHide={handlebidderModalClose}
-          //   style={{ height: "500vh" }}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Enter Item Details</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group controlId="itemName">
-                <Form.Label>bidder Name</Form.Label>
-              </Form.Group>
-              <hr />
-              <Form.Group controlId="itemName">
-                <Form.Label>Item Name</Form.Label>
-              </Form.Group>
-              <hr />
-              <Form.Group controlId="startingPrice" className="mb-3">
-                <Form.Label>Current Price</Form.Label>
-              </Form.Group>
-              <hr />
 
-              <Button
-                variant="primary"
-                type="submit"
-                onClick={handlebidderModalSubmit}
-              >
-                You Paid
-              </Button>
-              <hr />
-            </Form>
-          </Modal.Body>
-        </Modal>
-      </div>
-    </Container>
-  );
+                {userType === "Auctioneer" && (
+                    <Modal
+                        show={showModal}
+                        onHide={handleModalClose}
+                    //   style={{ height: "500vh" }}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Enter Item Details</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <Form.Group controlId="itemName">
+                                    <Form.Label>{auctioneerName}</Form.Label>
+                                </Form.Group>
+                                <Form.Group controlId="itemName">
+                                    <Form.Label>Item Name</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Enter item name"
+                                        value={auctions.length > 0 ? auctions[auctions.length - 1].name : itemName}
+                                        onChange={(event) => setItemName(event.target.value)}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="startingPrice" className="mb-3">
+                                    <Form.Label>Starting Price</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        placeholder="Enter starting price"
+                                        value={auctions.length > 0 ? auctions[auctions.length - 1].price : startingPrice}
+                                        onChange={(event) => setStartingPrice(event.target.value)}
+                                    />
+                                </Form.Group>
+
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    onClick={handleModalSubmit}
+                                    disabled={auctions.length > 0}
+                                >
+                                    Submit
+                                </Button>
+                                <hr />
+                                <p> current price</p>
+                                {bidders.map((bid) => (
+                                    <Row className="gx-0">
+                                        <Col>
+                                            <p>{bid.name}</p>
+                                        </Col>
+                                        <Col>
+                                            <p>${bid.amount}</p>
+                                        </Col>
+                                    </Row>
+                                ))}
+
+                            </Form>
+                        </Modal.Body>
+                    </Modal>
+                )}
+                <Modal
+                    show={showBidderModal}
+                    onHide={handlebidderModalClose}
+                //   style={{ height: "500vh" }}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Enter Item Details</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group controlId="itemName">
+                                <Form.Label>{bidderName}</Form.Label>
+                            </Form.Group>
+                            <Form.Group controlId="itemName">
+                                <Form.Label><b>{auctions.length > 0 && auctions[0].name}</b></Form.Label>
+                            </Form.Group>
+                            <Form.Group controlId="startingPrice" className="mb-3">
+                                <Form.Label>Current Price</Form.Label>
+                                {bidders.map((bid) => (
+                                    <Row className="gx-0">
+                                        <Col>
+                                            <p>{bid.name}</p>
+                                        </Col>
+                                        <Col>
+                                            <p>${bid.amount}</p>
+                                        </Col>
+                                    </Row>
+                                ))}
+                            </Form.Group>
+                            <hr />
+
+                            <Button
+                                variant="primary"
+                                type="submit"
+                                onClick={(e) => handlebidderModalSubmit(e, (auctions.length > 0 && bidders.length === 0) ? parseInt(auctions[0].price) + 100 : bidders.length > 0 && bidders[bidders.length - 1].amount + 100)}
+                                disabled={bidders.length > 0 && currentUser?.name === bidders[bidders.length - 1].name}
+                            >
+                                You Paid {bidAmount}
+                            </Button>
+                            <Button
+                                variant="white"
+                                onClick={() => { setBidAmount(parseInt(bidAmount) + 500) }}
+                            >
+                                +500
+                            </Button>
+                            <Button
+                                variant="white"
+                                onClick={() => setBidAmount(parseInt(bidAmount) + 1000)}
+                            >
+                                +1000
+                            </Button>
+                            <Button
+                                variant="danger"
+                                onClick={() => console.log(bidAmount)}
+                            >
+                                Reset
+                            </Button>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+            </div>
+        </Container>
+    );
 };
 
 export default Auction;
