@@ -125,10 +125,10 @@ const Bidder = () => {
                   auctions.length > 0 && bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
-                        bidders[bidders.length - 1].amount + 100
+                    bidders[bidders.length - 1].amount + 100
                 )
               }
-              disabled={
+              disabled={auctions.length === 0 ? true :
                 bidders.length > 0 &&
                 bidders[bidders.length - 1].name === currentUser?.name
               }
@@ -140,16 +140,18 @@ const Bidder = () => {
               onClick={() => {
                 setBidAmount(parseInt(bidAmount) + 500);
               }}
+              disabled={auctions.length === 0 && true}
             >
               +500
             </Button>
             <Button
               variant="white"
               onClick={() => setBidAmount(parseInt(bidAmount) + 1000)}
+              disabled={auctions.length === 0 && true}
             >
               +1000
             </Button>
-            <Button variant="danger" onClick={() => console.log(bidAmount)}>
+            <Button variant="danger" onClick={() => console.log(bidAmount)} disabled={auctions.length === 0 && true}>
               Reset
             </Button>
           </Form>

@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { createAuction, getAuction, getBids, login } from "../action";
 import "./style.css";
 import Bidder from "./Bidder";
+import { Link } from "react-router-dom";
 
 const Auction = () => {
     const [auctioneerName, setAuctioneerName] = useState("");
@@ -85,6 +86,7 @@ const Auction = () => {
                                     <Button variant="primary" type="submit">
                                         Submit
                                     </Button>
+
                                 </Form>
                             </Card.Body>
                         </Card>
