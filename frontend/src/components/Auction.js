@@ -24,7 +24,11 @@ const Auction = () => {
     event.preventDefault();
     console.log("Item Name:", itemName);
     console.log("Starting Price:", startingPrice);
-    setShowModal(false);
+    // Do any additional logic here
+
+    // Clear the form fields if needed
+    setItemName("");
+    setStartingPrice("");
   };
 
   const handleModalClose = () => {
@@ -40,7 +44,7 @@ const Auction = () => {
               <Card.Body>
                 <Card.Title>Auctioneer</Card.Title>
                 <Form onSubmit={handleAuctioneerSubmit}>
-                  <Form.Group controlId="auctioneerName">
+                  <Form.Group controlId="auctioneerName" className="mb-3">
                     <Form.Label>Name</Form.Label>
                     <Form.Control
                       type="text"
@@ -63,7 +67,7 @@ const Auction = () => {
               <Card.Body>
                 <Card.Title>Bidder</Card.Title>
                 <Form>
-                  <Form.Group controlId="bidderName">
+                  <Form.Group controlId="bidderName" className="mb-3">
                     <Form.Label>Name</Form.Label>
                     <Form.Control type="text" placeholder="Enter name" />
                   </Form.Group>
@@ -76,12 +80,16 @@ const Auction = () => {
           </Col>
         </Row>
 
-        <Modal show={showModal} onHide={handleModalClose}>
+        <Modal
+          show={showModal}
+          onHide={handleModalClose}
+          //   style={{ height: "500vh" }}
+        >
           <Modal.Header closeButton>
             <Modal.Title>Enter Item Details</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form onSubmit={handleModalSubmit}>
+            <Form>
               <Form.Group controlId="itemName">
                 <Form.Label>Auction Name</Form.Label>
               </Form.Group>
@@ -94,7 +102,7 @@ const Auction = () => {
                   onChange={(event) => setItemName(event.target.value)}
                 />
               </Form.Group>
-              <Form.Group controlId="startingPrice">
+              <Form.Group controlId="startingPrice" className="mb-3">
                 <Form.Label>Starting Price</Form.Label>
                 <Form.Control
                   type="number"
@@ -103,9 +111,24 @@ const Auction = () => {
                   onChange={(event) => setStartingPrice(event.target.value)}
                 />
               </Form.Group>
-              <Button variant="primary" type="submit">
+
+              <Button
+                variant="primary"
+                type="submit"
+                onClick={handleModalSubmit}
+              >
                 Submit
               </Button>
+              <hr />
+              <p> current price</p>
+              <Row className="gx-0">
+                <Col>
+                  <p>Bidder Name:</p>
+                </Col>
+                <Col>
+                  <p>$XXX</p> {/* Replace XXX with the actual current price */}
+                </Col>
+              </Row>
             </Form>
           </Modal.Body>
         </Modal>
