@@ -5,10 +5,12 @@ const cookieParser = require("cookie-parser");
 const enableWs = require("express-ws");
 const assetsRouter = require("./assets-router");
 const app = express();
+const cors = require('cors')
 const PREFIX = "/api";
 
 // Express setup
 app.use(bodyParser.json());
+app.use(cors())
 app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/src", assetsRouter);
