@@ -155,12 +155,13 @@ const Auction = () => {
         {userType === "Auctioneer" && (
           <Modal show={showModal} onHide={handleModalClose} centered>
             <Modal.Header closeButton>
-              <Modal.Title>Enter Item Details</Modal.Title>
+              <Modal.Title>Easy Bid</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form>
                 <Form.Group controlId="itemName">
-                  <Form.Label>{auctioneerName}</Form.Label>
+                  <Form.Label>Your Name -&nbsp;&nbsp;</Form.Label>
+                  <Form.Label> {auctioneerName}</Form.Label>
                 </Form.Group>
                 <Form.Group controlId="itemName">
                   <Form.Label>Item Name</Form.Label>
@@ -224,7 +225,7 @@ const Auction = () => {
         )}
         <Modal show={showBidderModal} onHide={handlebidderModalClose} centered>
           <Modal.Header closeButton>
-            <Modal.Title>Enter Item Details</Modal.Title>
+            <Modal.Title>Easy Bid</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
