@@ -219,16 +219,19 @@ const Auction = () => {
                             </Form.Group>
                             <Form.Group controlId="startingPrice" className="mb-3">
                                 <Form.Label>Current Price</Form.Label>
-                                {bidders.map((bid) => (
+                                {bidders.length === 0 ? auctions.map((auction) => (
                                     <Row className="gx-0">
                                         <Col>
-                                            <p>{bid.name}</p>
-                                        </Col>
-                                        <Col>
-                                            <p>${bid.amount}</p>
+                                            <p>{auction.name} - ${auction.price}</p>
                                         </Col>
                                     </Row>
-                                ))}
+                                )) :
+                                    <Row className="gx-0">
+                                        <Col>
+                                            <p>{bidders[bidders.length - 1].name} - ${bidders[bidders.length - 1].amount}</p>
+                                        </Col>
+                                    </Row>
+                                }
                             </Form.Group>
                             <hr />
 
@@ -236,7 +239,7 @@ const Auction = () => {
                                 variant="primary"
                                 type="submit"
                                 onClick={(e) => handlebidderModalSubmit(e, (auctions.length > 0 && bidders.length === 0) ? parseInt(auctions[0].price) + 100 : bidders.length > 0 && bidders[bidders.length - 1].amount + 100)}
-                                disabled={bidders.length > 0 && currentUser?.name === bidders[bidders.length - 1].name}
+                                disabled={bidders.length > 0 && bidders[bidders.length - 1].name === currentUser?.name}
                             >
                                 You Paid {bidAmount}
                             </Button>
