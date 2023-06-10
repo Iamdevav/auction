@@ -13,7 +13,6 @@ import {
 import { useDispatch } from "react-redux";
 import { createAuction, getAuction, getBids, login } from "../action";
 import "./style.css";
-import Bidder from "./Bidder";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,8 +26,8 @@ const Auction = () => {
   const [auctions, setAuctions] = useState([]);
   const [bidders, setBidders] = useState([]);
   const [showValidation, setShowValidation] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -57,12 +56,16 @@ const Auction = () => {
       setIsLoggingIn(false);
       toast.success("Login successful!");
       setShowModal(true);
-    }, 2000);
+    }, 1000);
     // setShowModal(true);
   };
 
   const handleModalSubmit = (event) => {
     event.preventDefault();
+    if (!itemName || !startingPrice) {
+      toast.error("Please enter item name and starting price.");
+      return;
+    }
     console.log("Item Name:", itemName);
     console.log("Starting Price:", startingPrice);
     const data = {
@@ -73,6 +76,7 @@ const Auction = () => {
 
     setItemName("");
     setStartingPrice("");
+    toast.success("Your item is ready to sell!");
   };
 
   const handleModalClose = () => {
@@ -111,9 +115,7 @@ const Auction = () => {
                       // }
                     />
                   </Form.Group>
-                  {/* <Button variant="primary" type="submit">
-                    Auction Login
-                  </Button> */}
+
                   <Button
                     variant="primary"
                     type="submit"
@@ -149,7 +151,7 @@ const Auction = () => {
                   <Form.Label> {auctioneerName}</Form.Label>
                 </Form.Group>
                 <Form.Group controlId="itemName">
-                  <Form.Label>Item Name</Form.Label>
+                  <Form.Label>Auction Item </Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter item name"
@@ -193,7 +195,7 @@ const Auction = () => {
                   Stop Auction
                 </Button>
                 <hr />
-                <p className="price-text"> current price</p>
+                <p className="price-text">current price</p>
                 {bidders.map((bid) => (
                   <div className="price-container">
                     <div>
