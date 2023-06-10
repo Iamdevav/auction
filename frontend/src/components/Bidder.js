@@ -9,15 +9,17 @@ import {
   Col,
   Container,
   Alert,
+  Spinner,
 } from "react-bootstrap";
 import { createBid, getAuction, getBids, login } from "../action";
 import "./style.css";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import socketIo from 'socket.io-client'
+import socketIo from "socket.io-client";
+import { FaArrowLeft } from "react-icons/fa";
 
-const ENDPOINT = "http://localhost:3000"
+const ENDPOINT = "http://localhost:3000";
 let socket;
 
 const Bidder = () => {
@@ -30,16 +32,17 @@ const Bidder = () => {
   const [userType, setUserType] = useState();
   const currentUser = JSON.parse(localStorage.getItem("users"));
   const [showValidation, setShowValidation] = useState(false);
-  const [bidStatus, setBidStatus] = useState(false)
+  const [bidStatus, setBidStatus] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   useEffect(() => {
-    socket = socketIo(ENDPOINT, { transports: ["websocket"] })
-    socket.on('getAuction', (data) => {
-      setAuctions(data)
-    })
-    socket.on('getBids', (data) => {
-      setBidders(data)
-    })
+    socket = socketIo(ENDPOINT, { transports: ["websocket"] });
+    socket.on("getAuction", (data) => {
+      setAuctions(data);
+    });
+    socket.on("getBids", (data) => {
+      setBidders(data);
+    });
   }, [bidStatus]);
 
   const handleBidderSubmit = (event) => {
@@ -75,8 +78,10 @@ const Bidder = () => {
       name: bidderName,
     };
     dispatch(createBid(data));
-    setBidStatus(true)
-    setTimeout(() => { setBidStatus(false) }, 1000)
+    setBidStatus(true);
+    setTimeout(() => {
+      setBidStatus(false);
+    }, 1000);
   };
   const handlebidderModalClose = () => {
     setShowBidderModal(false);
@@ -91,10 +96,17 @@ const Bidder = () => {
     <Container className="container-bidderBox">
       <Card className="custom-card">
         <Card.Body>
-          <Link to="/" className="back-button">
-            Back
-          </Link>
-          <Card.Title>Bidder</Card.Title>
+          <div className="back-button">
+            <div>
+              <Link to="/">
+                <FaArrowLeft className="back-icon" />
+              </Link>
+            </div>
+            <div style={{ marginLeft: "10px" }}>
+              <Card.Title>Bidder</Card.Title>
+            </div>
+          </div>
+          <hr />
           {showValidation && (
             <Alert variant="danger">Please enter your name.</Alert>
           )}
@@ -106,11 +118,22 @@ const Bidder = () => {
                 placeholder="Enter name"
                 value={bidderName}
                 onChange={handleNameChange}
-              // onChange={(event) => setBidderName(event.target.value)}
+                // onChange={(event) => setBidderName(event.target.value)}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
-              Submit
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={isLoggingIn}
+              style={{ width: "48vh" }}
+            >
+              {isLoggingIn ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Logging in...
+                </>
+              ) : (
+                "Bidder Login"
+              )}
             </Button>
           </Form>
         </Card.Body>
@@ -164,14 +187,14 @@ const Bidder = () => {
                   auctions.length > 0 && bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
-                    bidders[bidders.length - 1].amount + 100
+                        bidders[bidders.length - 1].amount + 100
                 )
               }
               disabled={
                 auctions.length === 0
                   ? true
                   : bidders.length > 0 &&
-                  bidders[bidders.length - 1].name === currentUser?.name
+                    bidders[bidders.length - 1].name === currentUser?.name
               }
             >
               You Paid {bidAmount}
