@@ -16,6 +16,10 @@ import "./style.css";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import socketIo from 'socket.io-client'
+
+const ENDPOINT = "http://localhost:3000"
+let socket;
 
 const Bidder = () => {
   const dispatch = useDispatch();
@@ -28,21 +32,17 @@ const Bidder = () => {
   const currentUser = JSON.parse(localStorage.getItem("users"));
   const [showValidation, setShowValidation] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [bidStatus, setBidStatus] = useState(false)
 
   useEffect(() => {
-    async function getAuctionData() {
-      setAuctions(await dispatch(getAuction()));
-    }
-    getAuctionData();
-  }, []);
-
-  useEffect(() => {
-    async function getAuctionData() {
-      setAuctions(await dispatch(getAuction()));
-      setBidders(await dispatch(getBids()));
-    }
-    getAuctionData();
-  }, []);
+    socket = socketIo(ENDPOINT, { transports: ["websocket"] })
+    socket.on('getAuction', (data) => {
+      setAuctions(data)
+    })
+    socket.on('getBids', (data) => {
+      setBidders(data)
+    })
+  }, [bidStatus]);
 
   const handleBidderSubmit = (event) => {
     event.preventDefault();
@@ -79,6 +79,8 @@ const Bidder = () => {
       name: bidderName,
     };
     dispatch(createBid(data));
+    setBidStatus(true)
+    setTimeout(() => { setBidStatus(false) }, 1000)
   };
   const handlebidderModalClose = () => {
     setShowBidderModal(false);
@@ -108,7 +110,7 @@ const Bidder = () => {
                 placeholder="Enter name"
                 value={bidderName}
                 onChange={handleNameChange}
-                // onChange={(event) => setBidderName(event.target.value)}
+              // onChange={(event) => setBidderName(event.target.value)}
               />
             </Form.Group>
 
@@ -175,14 +177,14 @@ const Bidder = () => {
                   auctions.length > 0 && bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
-                        bidders[bidders.length - 1].amount + 100
+                    bidders[bidders.length - 1].amount + 100
                 )
               }
               disabled={
                 auctions.length === 0
                   ? true
                   : bidders.length > 0 &&
-                    bidders[bidders.length - 1].name === currentUser?.name
+                  bidders[bidders.length - 1].name === currentUser?.name
               }
             >
               You Paid {bidAmount}

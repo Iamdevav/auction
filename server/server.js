@@ -6,6 +6,8 @@ const enableWs = require("express-ws");
 const assetsRouter = require("./assets-router");
 const app = express();
 const cors = require('cors')
+const socketIo = require('socket.io')
+const http = require('http')
 const PREFIX = "/api";
 
 // Express setup
@@ -24,6 +26,10 @@ let bidId = 0;
 let userId = 0;
 const validStatuses = ["pending", "accepting_bids", "sold", "no_sale"];
 
+const server = http.createServer(app)
+
+const io = socketIo(server)
+
 // Websocket notifications
 const wssClients = [];
 const wsInstance = enableWs(app);
@@ -32,6 +38,32 @@ const notifyWssByAuction = (auctionId) => {
   const auction = auctions.find((auction) => auction.id === auctionId);
   wssClients.forEach((ws) => ws.send(JSON.stringify(auction)));
 };
+
+io.on('connect', async function (socket) {
+  const getAuction = await getAuctionData()
+  socket.broadcast.emit('getAuction', getAuction)
+
+  const getBid = await getBidData()
+  socket.broadcast.emit('getBids', getBid)
+})
+
+const getBidData = () => {
+  try {
+    return bids
+  } catch (error) {
+
+  }
+}
+
+const getAuctionData = () => {
+  try {
+    return auctions
+  } catch (error) {
+
+  }
+}
+
+
 
 // CRUD for USERS
 app.get(`${PREFIX}/users/me`, (req, res) => {
@@ -161,9 +193,15 @@ app.get("/*", (_req, res) => {
 });
 
 const { PORT = 3000 } = process.env;
-app.listen(PORT, () => {
-  console.log();
+// app.listen(PORT, () => {
+//   console.log();
+//   console.log(`  App running in port ${PORT}`);
+//   console.log();
+//   console.log(`  > Local: \x1b[36mhttp://localhost:\x1b[1m${PORT}/\x1b[0m`);
+// });
+
+server.listen(PORT, () => {
   console.log(`  App running in port ${PORT}`);
   console.log();
   console.log(`  > Local: \x1b[36mhttp://localhost:\x1b[1m${PORT}/\x1b[0m`);
-});
+})
