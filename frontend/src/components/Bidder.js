@@ -1,7 +1,21 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Card, Button, Form, Modal, Row, Col } from "react-bootstrap";
+import {
+  Card,
+  Button,
+  Form,
+  Modal,
+  Row,
+  Col,
+  Container,
+  Alert,
+} from "react-bootstrap";
 import { createBid, getAuction, getBids, login } from "../action";
+import "./style.css";
+import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Bidder = () => {
   const [auctions, setAuctions] = useState([]);
   const [bidderName, setBidderName] = useState("");
@@ -11,6 +25,7 @@ const Bidder = () => {
   const [bidAmount, setBidAmount] = useState();
   const [userType, setUserType] = useState();
   const currentUser = JSON.parse(localStorage.getItem("users"));
+  const [showValidation, setShowValidation] = useState(false);
 
   useEffect(() => {
     async function getAuctionData() {
@@ -29,6 +44,10 @@ const Bidder = () => {
 
   const handleBidderSubmit = (event) => {
     event.preventDefault();
+    if (bidderName.trim() === "") {
+      setShowValidation(true);
+      return;
+    }
     if (bidderName) {
       setUserType("Bidder");
       const data = {
@@ -36,7 +55,11 @@ const Bidder = () => {
         userType: "Biddder",
       };
       dispatch(login(data));
-      setShowBidderModal(true);
+      setTimeout(() => {
+        toast.success("Login successful!");
+        setShowBidderModal(true);
+      }, 2000);
+      // setShowBidderModal(true);
       setBidAmount(
         auctions.length > 0 && bidders.length === 0
           ? parseInt(auctions[0].price) + 100
@@ -56,11 +79,23 @@ const Bidder = () => {
   const handlebidderModalClose = () => {
     setShowBidderModal(false);
   };
+  const handleNameChange = (event) => {
+    if (showValidation) {
+      setShowValidation(false);
+    }
+    setBidderName(event.target.value);
+  };
   return (
-    <div className="container" style={{ marginTop: "110px" }}>
-      <Card>
+    <Container className="container-bidderBox">
+      <Card className="custom-card">
         <Card.Body>
+          <Link to="/" className="back-button">
+            Back
+          </Link>
           <Card.Title>Bidder</Card.Title>
+          {showValidation && (
+            <Alert variant="danger">Please enter your name.</Alert>
+          )}
           <Form onSubmit={handleBidderSubmit}>
             <Form.Group controlId="auctioneerName" className="mb-3">
               <Form.Label>Name</Form.Label>
@@ -68,7 +103,8 @@ const Bidder = () => {
                 type="text"
                 placeholder="Enter name"
                 value={bidderName}
-                onChange={(event) => setBidderName(event.target.value)}
+                onChange={handleNameChange}
+                // onChange={(event) => setBidderName(event.target.value)}
               />
             </Form.Group>
             <Button variant="primary" type="submit">
@@ -76,6 +112,7 @@ const Bidder = () => {
             </Button>
           </Form>
         </Card.Body>
+        <ToastContainer position="top-center" autoClose={3000} />
       </Card>
       <Modal show={showBidderModal} onHide={handlebidderModalClose} centered>
         <Modal.Header closeButton>
@@ -163,7 +200,7 @@ const Bidder = () => {
           </Form>
         </Modal.Body>
       </Modal>
-    </div>
+    </Container>
   );
 };
 

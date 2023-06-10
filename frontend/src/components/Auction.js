@@ -7,12 +7,16 @@ import {
   Row,
   Col,
   Container,
+  Alert,
+  Spinner,
 } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { createAuction, getAuction, getBids, login } from "../action";
 import "./style.css";
 import Bidder from "./Bidder";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Auction = () => {
   const [auctioneerName, setAuctioneerName] = useState("");
@@ -22,6 +26,9 @@ const Auction = () => {
   const [userType, setUserType] = useState();
   const [auctions, setAuctions] = useState([]);
   const [bidders, setBidders] = useState([]);
+  const [showValidation, setShowValidation] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -35,13 +42,23 @@ const Auction = () => {
 
   const handleAuctioneerSubmit = (event) => {
     event.preventDefault();
+    if (auctioneerName.trim() === "") {
+      setShowValidation(true);
+      return;
+    }
+    setIsLoggingIn(true);
     setUserType("Auctioneer");
     const data = {
       name: auctioneerName,
       userType: "Auctioneer",
     };
     dispatch(login(data));
-    setShowModal(true);
+    setTimeout(() => {
+      setIsLoggingIn(false);
+      toast.success("Login successful!");
+      setShowModal(true);
+    }, 2000);
+    // setShowModal(true);
   };
 
   const handleModalSubmit = (event) => {
@@ -61,6 +78,12 @@ const Auction = () => {
   const handleModalClose = () => {
     setShowModal(false);
   };
+  const handleNameChange = (event) => {
+    if (showValidation) {
+      setShowValidation(false);
+    }
+    setAuctioneerName(event.target.value);
+  };
 
   return (
     <Container className="container-box">
@@ -70,7 +93,11 @@ const Auction = () => {
           <Col>
             <Card>
               <Card.Body>
-                <Card.Title>Auctioneer</Card.Title>
+                <Card.Title>Auctioneer Screen</Card.Title>
+                {showValidation && (
+                  <Alert variant="danger">Please enter your name.</Alert>
+                )}
+
                 <Form onSubmit={handleAuctioneerSubmit}>
                   <Form.Group controlId="auctioneerName" className="mb-3">
                     <Form.Label>Name</Form.Label>
@@ -78,13 +105,27 @@ const Auction = () => {
                       type="text"
                       placeholder="Enter name"
                       value={auctioneerName}
-                      onChange={(event) =>
-                        setAuctioneerName(event.target.value)
-                      }
+                      onChange={handleNameChange}
+                      // onChange={(event) =>
+                      //   setAuctioneerName(event.target.value)
+                      // }
                     />
                   </Form.Group>
-                  <Button variant="primary" type="submit">
-                    Submit
+                  {/* <Button variant="primary" type="submit">
+                    Auction Login
+                  </Button> */}
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    disabled={isLoggingIn}
+                  >
+                    {isLoggingIn ? (
+                      <>
+                        <Spinner animation="border" size="sm" /> Logging in...
+                      </>
+                    ) : (
+                      "Auction Login"
+                    )}
                   </Button>
                   <Link className="bidder-buttton" to="/bidder">
                     Bidder Login
@@ -93,9 +134,7 @@ const Auction = () => {
               </Card.Body>
             </Card>
           </Col>
-          {/* <Col>
-                        <Bidder />
-                    </Col> */}
+          <ToastContainer position="top-center" autoClose={3000} />
         </Row>
         {/* aution model --------------------------- */}
         {userType === "Auctioneer" && (
