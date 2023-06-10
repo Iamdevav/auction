@@ -125,7 +125,7 @@ const Bidder = () => {
               variant="primary"
               type="submit"
               disabled={isLoggingIn}
-              style={{ width: "48vh" }}
+              style={{ width: "57vh" }}
             >
               {isLoggingIn ? (
                 <>

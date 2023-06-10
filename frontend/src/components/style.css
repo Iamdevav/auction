@@ -31,8 +31,8 @@
   margin-left: 10px;
   border-radius: 7px;
   text-decoration: none;
-  padding-left: 60px;
-  padding-right: 60px;
+  padding-left: 75px;
+  padding-right: 75px;
 }
 .container-bidderBox {
   margin-top: 13%;
@@ -42,7 +42,22 @@
   flex-direction: row;
   display: flex;
 }
+.auction-button {
+  width: "28vh";
+}
 .card {
   width: 40%;
   height: 10vh;
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .card {
+    width: 80%;
+  }
+}
+
+@media (max-width: 576px) {
+  .card {
+    width: 100%;
+  }
 }

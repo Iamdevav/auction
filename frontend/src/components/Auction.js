@@ -11,7 +11,6 @@ import {
     Spinner,
 } from "react-bootstrap";
 import "./style.css";
-import Bidder from "./Bidder";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -96,13 +95,12 @@ const Auction = () => {
     const handleAuctionStatus = async (status) => {
         const data = {
             id: auctions.length > 0 && auctions[0].id,
-
-        }
+        };
         const updatedData = {
             status: status
         }
         await api.put(`auctions/${data.id}`, updatedData)
-    }
+    };
 
     return (
         <Container className="container-box">
@@ -113,21 +111,19 @@ const Auction = () => {
                         <Card>
                             <Card.Body>
                                 <Card.Title>Auctioneer Screen</Card.Title>
+                                <hr />
                                 {showValidation && (
                                     <Alert variant="danger">Please enter your name.</Alert>
                                 )}
 
                                 <Form onSubmit={handleAuctioneerSubmit}>
-                                    <Form.Group controlId="auctioneerName" className="mb-3">
+                                    <Form.Group controlId="auctioneerName" className="mb-4">
                                         <Form.Label>Name</Form.Label>
                                         <Form.Control
                                             type="text"
                                             placeholder="Enter name"
                                             value={auctioneerName}
                                             onChange={handleNameChange}
-                                        // onChange={(event) =>
-                                        //   setAuctioneerName(event.target.value)
-                                        // }
                                         />
                                     </Form.Group>
 
@@ -135,7 +131,7 @@ const Auction = () => {
                                         variant="primary"
                                         type="submit"
                                         disabled={isLoggingIn}
-                                        style={{ width: "23vh" }}
+                                        style={{ width: "28vh" }}
                                     >
                                         {isLoggingIn ? (
                                             <>
@@ -225,8 +221,20 @@ const Auction = () => {
                             </Form>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="danger" disabled={auctions.length === 0 && true} onClick={() => handleAuctionStatus("no_sale")}>NO SALE</Button>
-                            <Button variant="success" disabled={auctions.length === 0 && true} onClick={() => handleAuctionStatus("sold")}>SOLD</Button>
+                            <Button
+                                variant="danger"
+                                disabled={auctions.length === 0 && true}
+                                onClick={() => handleAuctionStatus("no_sale")}
+                            >
+                                NO SALE
+                            </Button>
+                            <Button
+                                variant="success"
+                                disabled={auctions.length === 0 && true}
+                                onClick={() => handleAuctionStatus("sold")}
+                            >
+                                SOLD
+                            </Button>
                         </Modal.Footer>
                     </Modal>
                 )}
