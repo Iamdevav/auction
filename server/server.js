@@ -63,8 +63,6 @@ const getAuctionData = () => {
   }
 }
 
-
-
 // CRUD for USERS
 app.get(`${PREFIX}/users/me`, (req, res) => {
   const { userId } = req.cookies;

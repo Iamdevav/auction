@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
-import Auction from "./auction";
+import Auction from './auction'
+
 
 const rootReducers = combineReducers({
     Auction

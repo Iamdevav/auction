@@ -118,7 +118,7 @@ const Bidder = () => {
                 placeholder="Enter name"
                 value={bidderName}
                 onChange={handleNameChange}
-                // onChange={(event) => setBidderName(event.target.value)}
+              // onChange={(event) => setBidderName(event.target.value)}
               />
             </Form.Group>
             <Button
@@ -187,14 +187,14 @@ const Bidder = () => {
                   auctions.length > 0 && bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
-                        bidders[bidders.length - 1].amount + 100
+                    bidders[bidders.length - 1].amount + 100
                 )
               }
               disabled={
                 auctions.length === 0
                   ? true
                   : bidders.length > 0 &&
-                    bidders[bidders.length - 1].name === currentUser?.name
+                  bidders[bidders.length - 1].name === currentUser?.name
               }
             >
               You Paid {bidAmount}
@@ -217,7 +217,7 @@ const Bidder = () => {
             </Button>
             <Button
               variant="danger"
-              onClick={() => console.log(bidAmount)}
+              onClick={() => setBidAmount(bidders[bidders.length - 1].amount + 100)}
               disabled={auctions.length === 0 && true}
             >
               Reset

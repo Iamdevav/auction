@@ -50,3 +50,14 @@ export const getBids = () => async (dispatch) => {
 
     }
 }
+
+export const updateAuctionStatus = (data) => async (dispatch) => {
+    try {
+        const updatedData = {
+            status: data.status
+        }
+        const res = await api.put(`auctions/${data.id}`, updatedData)
+    } catch (error) {
+
+    }
+}
