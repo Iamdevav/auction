@@ -11,13 +11,13 @@ import {
   Alert,
   Spinner,
 } from "react-bootstrap";
-import { createBid, getAuction, getBids, login } from "../action";
 import "./style.css";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import socketIo from "socket.io-client";
 import { FaArrowLeft } from "react-icons/fa";
+import api from "../api";
 
 const ENDPOINT = "http://localhost:3000";
 let socket;
@@ -25,7 +25,6 @@ let socket;
 const Bidder = () => {
   const [auctions, setAuctions] = useState([]);
   const [bidderName, setBidderName] = useState("");
-  const dispatch = useDispatch();
   const [showBidderModal, setShowBidderModal] = useState(false);
   const [bidders, setBidders] = useState([]);
   const [bidAmount, setBidAmount] = useState();
@@ -45,7 +44,7 @@ const Bidder = () => {
     });
   }, [bidStatus]);
 
-  const handleBidderSubmit = (event) => {
+  const handleBidderSubmit = async (event) => {
     event.preventDefault();
     if (bidderName.trim() === "") {
       setShowValidation(true);
@@ -57,7 +56,8 @@ const Bidder = () => {
         name: bidderName,
         userType: "Biddder",
       };
-      dispatch(login(data));
+      await api.post(`login`, data)
+      localStorage.setItem('users', JSON.stringify(data))
       setTimeout(() => {
         toast.success("Login successful!");
         setShowBidderModal(true);
@@ -70,14 +70,14 @@ const Bidder = () => {
       );
     }
   };
-  const handlebidderModalSubmit = (event, bidPrice) => {
+  const handlebidderModalSubmit = async (event, bidPrice) => {
     event.preventDefault();
     const data = {
       auction_id: auctions.length > 0 && auctions[0].id,
       amount: bidPrice,
       name: bidderName,
     };
-    dispatch(createBid(data));
+    await api.post(`bids`, data)
     setBidStatus(true);
     setTimeout(() => {
       setBidStatus(false);
@@ -204,21 +204,30 @@ const Bidder = () => {
               onClick={() => {
                 setBidAmount(parseInt(bidAmount) + 500);
               }}
-              disabled={auctions.length === 0 && true}
+              disabled={auctions.length === 0
+                ? true
+                : bidders.length > 0 &&
+                bidders[bidders.length - 1].name === currentUser?.name}
             >
               +500
             </Button>
             <Button
               variant="white"
               onClick={() => setBidAmount(parseInt(bidAmount) + 1000)}
-              disabled={auctions.length === 0 && true}
+              disabled={auctions.length === 0
+                ? true
+                : bidders.length > 0 &&
+                bidders[bidders.length - 1].name === currentUser?.name}
             >
               +1000
             </Button>
             <Button
               variant="danger"
               onClick={() => setBidAmount(bidders[bidders.length - 1].amount + 100)}
-              disabled={auctions.length === 0 && true}
+              disabled={auctions.length === 0
+                ? true
+                : bidders.length > 0 &&
+                bidders[bidders.length - 1].name === currentUser?.name}
             >
               Reset
             </Button>

@@ -10,14 +10,13 @@ import {
     Alert,
     Spinner,
 } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { createAuction, getAuction, getBids, login, updateAuctionStatus } from "../action";
 import "./style.css";
 import Bidder from "./Bidder";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import socketIo from "socket.io-client";
+import api from "../api";
 
 const ENDPOINT = "http://localhost:3000";
 let socket;
@@ -34,8 +33,6 @@ const Auction = () => {
     const [showSuccess, setShowSuccess] = useState(false);
     const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-    const dispatch = useDispatch();
-
     useEffect(() => {
         socket = socketIo(ENDPOINT, { transports: ["websocket"] });
         socket.on("getAuction", function (data) {
@@ -46,7 +43,7 @@ const Auction = () => {
         });
     }, [startingPrice]);
 
-    const handleAuctioneerSubmit = (event) => {
+    const handleAuctioneerSubmit = async (event) => {
         event.preventDefault();
         if (auctioneerName.trim() === "") {
             setShowValidation(true);
@@ -58,28 +55,26 @@ const Auction = () => {
             name: auctioneerName,
             userType: "Auctioneer",
         };
-        dispatch(login(data));
+        await api.post(`login`, data)
+        localStorage.setItem('users', JSON.stringify(data))
         setTimeout(() => {
             setIsLoggingIn(false);
             toast.success("Login successful!");
             setShowModal(true);
         }, 2000);
-        // setShowModal(true);
     };
 
-    const handleModalSubmit = (event) => {
+    const handleModalSubmit = async (event) => {
         event.preventDefault();
         if (!itemName || !startingPrice) {
             toast.error("Please enter item name and starting price.");
             return;
         }
-        console.log("Item Name:", itemName);
-        console.log("Starting Price:", startingPrice);
         const data = {
             name: itemName,
             price: startingPrice,
         };
-        dispatch(createAuction(data));
+        await api.post('auctions', data)
         socket.on("getAuction", function (data) {
             setAuctions(data);
         });
@@ -98,12 +93,15 @@ const Auction = () => {
         }
         setAuctioneerName(event.target.value);
     };
-    const handleAuctionStatus = (status) => {
+    const handleAuctionStatus = async (status) => {
         const data = {
             id: auctions.length > 0 && auctions[0].id,
-            status: status,
+
         }
-        dispatch(updateAuctionStatus(data))
+        const updatedData = {
+            status: status
+        }
+        await api.put(`auctions/${data.id}`, updatedData)
     }
 
     return (
