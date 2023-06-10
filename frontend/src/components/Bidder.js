@@ -9,7 +9,6 @@ import {
   Col,
   Container,
   Alert,
-  Spinner,
 } from "react-bootstrap";
 import { createBid, getAuction, getBids, login } from "../action";
 import "./style.css";
@@ -22,16 +21,15 @@ const ENDPOINT = "http://localhost:3000"
 let socket;
 
 const Bidder = () => {
-  const dispatch = useDispatch();
   const [auctions, setAuctions] = useState([]);
   const [bidderName, setBidderName] = useState("");
+  const dispatch = useDispatch();
   const [showBidderModal, setShowBidderModal] = useState(false);
   const [bidders, setBidders] = useState([]);
   const [bidAmount, setBidAmount] = useState();
   const [userType, setUserType] = useState();
   const currentUser = JSON.parse(localStorage.getItem("users"));
   const [showValidation, setShowValidation] = useState(false);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [bidStatus, setBidStatus] = useState(false)
 
   useEffect(() => {
@@ -50,7 +48,6 @@ const Bidder = () => {
       setShowValidation(true);
       return;
     }
-    setIsLoggingIn(true);
     if (bidderName) {
       setUserType("Bidder");
       const data = {
@@ -59,10 +56,9 @@ const Bidder = () => {
       };
       dispatch(login(data));
       setTimeout(() => {
-        setIsLoggingIn(false);
         toast.success("Login successful!");
         setShowBidderModal(true);
-      }, 1000);
+      }, 2000);
       // setShowBidderModal(true);
       setBidAmount(
         auctions.length > 0 && bidders.length === 0
@@ -113,15 +109,8 @@ const Bidder = () => {
               // onChange={(event) => setBidderName(event.target.value)}
               />
             </Form.Group>
-
-            <Button variant="primary" type="submit" disabled={isLoggingIn}>
-              {isLoggingIn ? (
-                <>
-                  <Spinner animation="border" size="sm" /> Logging in...
-                </>
-              ) : (
-                "Bidder Login"
-              )}
+            <Button variant="primary" type="submit">
+              Submit
             </Button>
           </Form>
         </Card.Body>
@@ -134,11 +123,9 @@ const Bidder = () => {
         <Modal.Body>
           <Form>
             <Form.Group controlId="itemName">
-              <Form.Label>Your Name - </Form.Label>
               <Form.Label>{bidderName}</Form.Label>
             </Form.Group>
             <Form.Group controlId="itemName">
-              <Form.Label>Auction Item - </Form.Label>
               <Form.Label>
                 <b>{auctions.length > 0 && auctions[0].name}</b>
               </Form.Label>
