@@ -47,7 +47,6 @@ const Bidder = () => {
     socket.on("getBids", (data) => {
       setBidders(data);
       if (data.length !== 0) {
-
         setBidAmount(data[data.length - 1].auction_id === auctionData[auctionData.length - 1].id ? data[data.length - 1].amount + 100 : parseInt(auctionData[auctionData.length - 1].price) + 100)
       }
     });
@@ -77,7 +76,7 @@ const Bidder = () => {
       setBidAmount(
         auctions.length > 0 && bidders.length === 0
           ? parseInt(auctions[auctions.length - 1].price) + 100
-          : bidders[bidders.length - 1]?.auction_id === auctions[auctions.length - 1]?.id ? '$' + bidders[bidders.length - 1]?.amount + 100 : parseInt(auctions[auctions.length - 1].price) + 100
+          : bidders[bidders.length - 1]?.auction_id === auctions[auctions.length - 1]?.id ? bidders.length !== 0 && '$' + bidders[bidders.length - 1]?.amount + 100 : parseInt(auctions[auctions.length - 1].price) + 100
       );
     }
   };
