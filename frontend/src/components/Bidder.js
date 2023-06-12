@@ -102,7 +102,7 @@ const Bidder = () => {
     setBidderName(event.target.value);
   };
   return (
-    <Container className="container-bidderBox">
+    <Container className="container-box">
       <Card className="custom-card">
         <Card.Body>
           <div className="back-button">
@@ -174,6 +174,9 @@ const Bidder = () => {
                 </div>
               ))}
             </Form.Group>
+            <Form.Group controlId="itemName">
+              <Form.Label>Auction Item Current Status</Form.Label>
+            </Form.Group>
             <hr />
 
             <Button
@@ -185,35 +188,51 @@ const Bidder = () => {
                   bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
-                    bidders[bidders.length - 1].amount + 100
+                        bidders[bidders.length - 1].amount + 100
                 )
               }
-              disabled={auctions.length !== 0 && auctions[0].buttonStatus === "Stop" ? true : false}
+              disabled={
+                auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
+                  ? true
+                  : false
+              }
             >
               You Paid {bidAmount}
             </Button>
             <Button
               variant="white"
               onClick={() => {
-                setBidAmount(parseInt(bidAmount) + 500);
+                setBidAmount(parseInt(bidAmount) + 100);
               }}
-              disabled={auctions.length !== 0 && auctions[0].buttonStatus === "Stop" ? true : false}
+              disabled={
+                auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
+                  ? true
+                  : false
+              }
             >
-              +500
+              +100
             </Button>
             <Button
               variant="white"
-              onClick={() => setBidAmount(parseInt(bidAmount) + 1000)}
-              disabled={auctions.length !== 0 && auctions[0].buttonStatus === "Stop" ? true : false}
+              onClick={() => setBidAmount(parseInt(bidAmount) + 200)}
+              disabled={
+                auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
+                  ? true
+                  : false
+              }
             >
-              +1000
+              +200
             </Button>
             <Button
               variant="danger"
               onClick={() =>
                 setBidAmount(bidders[bidders.length - 1].amount + 100)
               }
-              disabled={auctions.length !== 0 && auctions[0].buttonStatus === "Stop" ? true : false}
+              disabled={
+                auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
+                  ? true
+                  : false
+              }
             >
               Reset
             </Button>
