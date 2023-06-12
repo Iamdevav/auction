@@ -38,15 +38,15 @@ const Bidder = () => {
     socket = socketIo(ENDPOINT, { transports: ["websocket"] });
     socket.on("getAuction", (data) => {
       setAuctions(data);
-      console.log(data.length)
+      console.log(data.length);
       if (bidders.length === 0) {
-        setBidAmount(data.length !== 0 && parseInt(data[0].price) + 100)
+        setBidAmount(data.length !== 0 && parseInt(data[0].price) + 100);
       }
     });
     socket.on("getBids", (data) => {
       setBidders(data);
       if (data.length !== 0) {
-        setBidAmount(data[data.length - 1].amount + 100)
+        setBidAmount(data[data.length - 1].amount + 100);
       }
     });
   }, [bidStatus]);
@@ -57,15 +57,17 @@ const Bidder = () => {
       setShowValidation(true);
       return;
     }
+    setIsLoggingIn(true);
     if (bidderName) {
       setUserType("Bidder");
       const data = {
         name: bidderName,
         userType: "Biddder",
       };
-      await api.post(`login`, data)
-      localStorage.setItem('users', JSON.stringify(data))
+      await api.post(`login`, data);
+      localStorage.setItem("users", JSON.stringify(data));
       setTimeout(() => {
+        setIsLoggingIn(false);
         toast.success("Login successful!");
         setShowBidderModal(true);
       }, 2000);
@@ -84,7 +86,7 @@ const Bidder = () => {
       amount: bidPrice,
       name: bidderName,
     };
-    await api.post(`bids`, data)
+    await api.post(`bids`, data);
     setBidStatus(true);
     setTimeout(() => {
       setBidStatus(false);
@@ -125,7 +127,7 @@ const Bidder = () => {
                 placeholder="Enter name"
                 value={bidderName}
                 onChange={handleNameChange}
-              // onChange={(event) => setBidderName(event.target.value)}
+                // onChange={(event) => setBidderName(event.target.value)}
               />
             </Form.Group>
             <Button
@@ -144,7 +146,7 @@ const Bidder = () => {
             </Button>
           </Form>
         </Card.Body>
-        <ToastContainer position="top-center" autoClose={3000} />
+        <ToastContainer position="top-right" autoClose={3000} />
       </Card>
       <Modal show={showBidderModal} onHide={handlebidderModalClose} centered>
         <Modal.Header closeButton>
@@ -194,7 +196,7 @@ const Bidder = () => {
                   bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
-                    bidders[bidders.length - 1].amount + 100
+                        bidders[bidders.length - 1].amount + 100
                 )
               }
             >
@@ -205,21 +207,20 @@ const Bidder = () => {
               onClick={() => {
                 setBidAmount(parseInt(bidAmount) + 500);
               }}
-
             >
               +500
             </Button>
             <Button
               variant="white"
               onClick={() => setBidAmount(parseInt(bidAmount) + 1000)}
-
             >
               +1000
             </Button>
             <Button
               variant="danger"
-              onClick={() => setBidAmount(bidders[bidders.length - 1].amount + 100)}
-
+              onClick={() =>
+                setBidAmount(bidders[bidders.length - 1].amount + 100)
+              }
             >
               Reset
             </Button>
