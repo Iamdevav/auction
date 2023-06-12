@@ -149,10 +149,10 @@ const Auction = () => {
     }, [1000]);
   };
 
-  //   const handleAddAuction = () => {
-  //     setAuctions([]);
-  //     setBidders([]);
-  //   };
+  const handleAddAuction = () => {
+    setAuctions([]);
+    setBidders([]);
+  };
 
   return (
     <Container className="container-box">
@@ -265,8 +265,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Start"
-                      ? true
-                      : false
+                        ? true
+                        : false
                   }
                 >
                   Start Auction
@@ -280,24 +280,34 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                      ? true
-                      : auctions[auctions.length - 1].status !== "pending" &&
+                        ? true
+                        : auctions[auctions.length - 1].status !== "pending" &&
                         true
                   }
                 >
                   Stop Auction
                 </Button>
-                {/* <Button
+                <Button
                   className="stop-button"
                   variant="success"
                   type="button"
                   onClick={() => handleAddAuction()}
                 >
                   Add Auction
-                </Button> */}
+                </Button>
                 <hr />
                 <p className="price-text"> current price</p>
-                {bidders.map((bid) => (
+                {bidders.filter((bid) => bid.auction_id === auctions[auctions.length - 1].id).map(data => (
+                  <div className="price-container">
+                    <div>
+                      <p>{data.name}</p>
+                    </div>
+                    <div>
+                      <p>${data.amount}</p>
+                    </div>
+                  </div>
+                ))}
+                {/* {bidders.map((bid) => (
                   <div className="price-container">
                     <div>
                       <p>{bid.name}</p>
@@ -306,7 +316,7 @@ const Auction = () => {
                       <p>${bid.amount}</p>
                     </div>
                   </div>
-                ))}
+                ))} */}
               </Form>
             </Modal.Body>
             <Modal.Footer>
