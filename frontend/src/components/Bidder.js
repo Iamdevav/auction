@@ -19,7 +19,7 @@ import socketIo from "socket.io-client";
 import { FaArrowLeft } from "react-icons/fa";
 import api from "../api";
 
-const ENDPOINT = "http://localhost:3000";
+const ENDPOINT = "http://localhost:5000";
 let socket;
 
 const Bidder = () => {
@@ -163,6 +163,17 @@ const Bidder = () => {
             </Form.Group>
             <Form.Group controlId="startingPrice" className="mb-3">
               <Form.Label>Current Price</Form.Label>
+              <div className="price-container">
+                {bidders.length !== 0 && (
+                  <p>
+                    {/* {bidders[bidders.length - 1].name} - $ */}$
+                    {bidders[bidders.length - 1].amount}
+                  </p>
+                )}
+              </div>
+            </Form.Group>
+            <Form.Group controlId="itemName">
+              <Form.Label>Auction Item Current Status</Form.Label>
               {bidders.map((bid) => (
                 <div className="price-container">
                   <div>
@@ -173,9 +184,6 @@ const Bidder = () => {
                   </div>
                 </div>
               ))}
-            </Form.Group>
-            <Form.Group controlId="itemName">
-              <Form.Label>Auction Item Current Status</Form.Label>
             </Form.Group>
             <hr />
 

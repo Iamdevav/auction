@@ -5,14 +5,14 @@ const cookieParser = require("cookie-parser");
 const enableWs = require("express-ws");
 const assetsRouter = require("./assets-router");
 const app = express();
-const cors = require('cors')
-const socketIo = require('socket.io')
-const http = require('http')
+const cors = require("cors");
+const socketIo = require("socket.io");
+const http = require("http");
 const PREFIX = "/api";
 
 // Express setup
 app.use(bodyParser.json());
-app.use(cors())
+app.use(cors());
 app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/src", assetsRouter);
@@ -26,9 +26,9 @@ let bidId = 0;
 let userId = 0;
 const validStatuses = ["pending", "accepting_bids", "sold", "no_sale"];
 
-const server = http.createServer(app)
+const server = http.createServer(app);
 
-const io = socketIo(server)
+const io = socketIo(server);
 
 // Websocket notifications
 const wssClients = [];
@@ -39,29 +39,25 @@ const notifyWssByAuction = (auctionId) => {
   wssClients.forEach((ws) => ws.send(JSON.stringify(auction)));
 };
 
-io.on('connect', async function (socket) {
-  const getAuction = await getAuctionData()
-  socket.broadcast.emit('getAuction', getAuction)
+io.on("connect", async function (socket) {
+  const getAuction = await getAuctionData();
+  socket.broadcast.emit("getAuction", getAuction);
 
-  const getBid = await getBidData()
-  socket.broadcast.emit('getBids', getBid)
-})
+  const getBid = await getBidData();
+  socket.broadcast.emit("getBids", getBid);
+});
 
 const getBidData = () => {
   try {
-    return bids
-  } catch (error) {
-
-  }
-}
+    return bids;
+  } catch (error) {}
+};
 
 const getAuctionData = () => {
   try {
-    return auctions
-  } catch (error) {
-
-  }
-}
+    return auctions;
+  } catch (error) {}
+};
 
 // CRUD for USERS
 app.get(`${PREFIX}/users/me`, (req, res) => {
@@ -190,7 +186,7 @@ app.get("/*", (_req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-const { PORT = 3000 } = process.env;
+const { PORT = 5000 } = process.env;
 // app.listen(PORT, () => {
 //   console.log();
 //   console.log(`  App running in port ${PORT}`);
@@ -202,4 +198,4 @@ server.listen(PORT, () => {
   console.log(`  App running in port ${PORT}`);
   console.log();
   console.log(`  > Local: \x1b[36mhttp://localhost:\x1b[1m${PORT}/\x1b[0m`);
-})
+});

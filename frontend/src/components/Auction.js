@@ -17,7 +17,7 @@ import socketIo from "socket.io-client";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 
-const ENDPOINT = "http://localhost:3000";
+const ENDPOINT = "http://localhost:5000";
 let socket;
 
 const Auction = () => {
