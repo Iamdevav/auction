@@ -38,9 +38,16 @@ const Bidder = () => {
     socket = socketIo(ENDPOINT, { transports: ["websocket"] });
     socket.on("getAuction", (data) => {
       setAuctions(data);
+      console.log(data.length)
+      if (bidders.length === 0) {
+        setBidAmount(data.length !== 0 && parseInt(data[0].price) + 100)
+      }
     });
     socket.on("getBids", (data) => {
       setBidders(data);
+      if (data.length !== 0) {
+        setBidAmount(data[data.length - 1].amount + 100)
+      }
     });
   }, [bidStatus]);
 
@@ -184,17 +191,11 @@ const Bidder = () => {
               onClick={(e) =>
                 handlebidderModalSubmit(
                   e,
-                  auctions.length > 0 && bidders.length === 0
+                  bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
                     bidders[bidders.length - 1].amount + 100
                 )
-              }
-              disabled={
-                auctions.length === 0
-                  ? true
-                  : bidders.length > 0 &&
-                  bidders[bidders.length - 1].name === currentUser?.name
               }
             >
               You Paid {bidAmount}
@@ -204,30 +205,21 @@ const Bidder = () => {
               onClick={() => {
                 setBidAmount(parseInt(bidAmount) + 500);
               }}
-              disabled={auctions.length === 0
-                ? true
-                : bidders.length > 0 &&
-                bidders[bidders.length - 1].name === currentUser?.name}
+
             >
               +500
             </Button>
             <Button
               variant="white"
               onClick={() => setBidAmount(parseInt(bidAmount) + 1000)}
-              disabled={auctions.length === 0
-                ? true
-                : bidders.length > 0 &&
-                bidders[bidders.length - 1].name === currentUser?.name}
+
             >
               +1000
             </Button>
             <Button
               variant="danger"
               onClick={() => setBidAmount(bidders[bidders.length - 1].amount + 100)}
-              disabled={auctions.length === 0
-                ? true
-                : bidders.length > 0 &&
-                bidders[bidders.length - 1].name === currentUser?.name}
+
             >
               Reset
             </Button>
