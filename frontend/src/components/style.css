@@ -55,6 +55,11 @@
   color: cornflowerblue;
   font-weight: bolder;
 }
+.current-status {
+  margin-left: 10px;
+  color: rgb(243, 82, 82);
+  font-weight: bolder;
+}
 /* Responsive Styles */
 @media (max-width: 768px) {
   .card {

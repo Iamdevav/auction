@@ -160,7 +160,7 @@ const Auction = () => {
                 <Card.Title>Auctioneer Screen</Card.Title>
                 <hr />
                 {showValidation && (
-                  <Alert variant="danger">Please enter your name.</Alert>
+                  <Alert variant="danger">Please enter your name!</Alert>
                 )}
 
                 <Form onSubmit={handleAuctioneerSubmit}>
@@ -192,9 +192,6 @@ const Auction = () => {
                       </Button>
                     </Col>
                     <Col>
-                      {/* <Link className="bidder-buttton" to="/bidder">
-                        Bidder Login
-                      </Link> */}
                       <Button
                         className="all-button"
                         onClick={handleButtonClick}
@@ -218,7 +215,7 @@ const Auction = () => {
             <Modal.Body>
               <Form>
                 <Form.Group controlId="itemName">
-                  <Form.Label>Your Name </Form.Label>
+                  <Form.Label>Your Name -</Form.Label>
                   <Form.Label className="product-name">
                     {" "}
                     {auctioneerName}

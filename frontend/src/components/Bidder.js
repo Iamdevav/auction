@@ -90,6 +90,7 @@ const Bidder = () => {
     setBidStatus(true);
     setTimeout(() => {
       setBidStatus(false);
+      toast.success("Your payment is successful!");
     }, 1000);
   };
   const handlebidderModalClose = () => {
@@ -173,20 +174,19 @@ const Bidder = () => {
                 <Form.Label>Current Price -</Form.Label>
 
                 {bidders.length !== 0 ? (
-                  <Form.Label>${bidders[bidders.length - 1].amount}</Form.Label>
-                ) : (
                   <Form.Label className="product-name">
-                    {" "}
-                    {"$" + auctions[0]?.price}
+                    ${bidders[bidders.length - 1].amount}
                   </Form.Label>
+                ) : (
+                  <Form.Label> {"$" + auctions[0]?.price}</Form.Label>
                   // "$" + auctions[0]?.price
                 )}
               </Form.Group>
             )}
             {auctions.length > 0 && (
               <Form.Group controlId="item-name">
-                <Form.Label>
-                  Auction Item Current Status :{" "}
+                <Form.Label> Auction Item Current Status -</Form.Label>
+                <Form.Label className="current-status">
                   {auctions[0]?.buttonStatus === "Stop"
                     ? "Stop Auction"
                     : auctions[0].status !== "pending" && auctions[0].status}
