@@ -149,10 +149,10 @@ const Auction = () => {
     }, [1000]);
   };
 
-  const handleAddAuction = () => {
-    setAuctions([])
-    setBidders([])
-  }
+  //   const handleAddAuction = () => {
+  //     setAuctions([]);
+  //     setBidders([]);
+  //   };
 
   return (
     <Container className="container-box">
@@ -265,8 +265,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Start"
-                        ? true
-                        : false
+                      ? true
+                      : false
                   }
                 >
                   Start Auction
@@ -280,27 +280,21 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                        ? true
-                        : auctions[auctions.length - 1].status !== "pending" && true
+                      ? true
+                      : auctions[auctions.length - 1].status !== "pending" &&
+                        true
                   }
                 >
                   Stop Auction
                 </Button>
-                <Button
+                {/* <Button
                   className="stop-button"
                   variant="success"
                   type="button"
                   onClick={() => handleAddAuction()}
-                  disabled={
-                    auctions.length === 0
-                      ? false
-                      : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                        ? true
-                        : auctions[auctions.length - 1].status !== "pending" && true
-                  }
                 >
                   Add Auction
-                </Button>
+                </Button> */}
                 <hr />
                 <p className="price-text"> current price</p>
                 {bidders.map((bid) => (
