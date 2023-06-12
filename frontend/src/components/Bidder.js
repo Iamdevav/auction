@@ -161,7 +161,8 @@ const Bidder = () => {
                 <b>{auctions.length > 0 && auctions[0].name}</b>
               </Form.Label>
             </Form.Group>
-            <Form.Group controlId="startingPrice" className="mb-3">
+            {auctions.length === 0 && 'There is no Auction item'}
+            {auctions.length > 0 && <Form.Group controlId="startingPrice" className="mb-3">
               <Form.Label>Current Price</Form.Label>
               <div className="price-container">
                 {bidders.length !== 0 ?
@@ -171,8 +172,8 @@ const Bidder = () => {
                   </p>
                   : '$' + auctions[0]?.price}
               </div>
-            </Form.Group>
-            <Form.Group controlId="itemName">
+            </Form.Group>}
+            {auctions.length > 0 && <Form.Group controlId="itemName">
               <Form.Label>Auction Item Current Status</Form.Label>
               {bidders.map((bid) => (
                 <div className="price-container">
@@ -184,7 +185,7 @@ const Bidder = () => {
                   </div>
                 </div>
               ))}
-            </Form.Group>
+            </Form.Group>}
             <hr />
 
             <Button
@@ -202,7 +203,7 @@ const Bidder = () => {
               disabled={
                 auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
                   ? true
-                  : false
+                  : auctions.length === 0 ? true : false
               }
             >
               You Paid {bidAmount}
@@ -215,7 +216,7 @@ const Bidder = () => {
               disabled={
                 auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
                   ? true
-                  : false
+                  : auctions.length === 0 ? true : false
               }
             >
               +100
@@ -226,7 +227,7 @@ const Bidder = () => {
               disabled={
                 auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
                   ? true
-                  : false
+                  : auctions.length === 0 ? true : false
               }
             >
               +200
@@ -239,7 +240,7 @@ const Bidder = () => {
               disabled={
                 auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
                   ? true
-                  : false
+                  : auctions.length === 0 ? true : false
               }
             >
               Reset
