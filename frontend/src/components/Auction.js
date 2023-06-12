@@ -30,7 +30,6 @@ const Auction = () => {
   const [auctions, setAuctions] = useState([]);
   const [bidders, setBidders] = useState([]);
   const [showValidation, setShowValidation] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [auctionStatus, setAuctionStatus] = useState(false);
 
@@ -57,7 +56,6 @@ const Auction = () => {
       userType: "Auctioneer",
     };
     await api.post(`login`, data);
-    localStorage.setItem("users", JSON.stringify(data));
     setTimeout(() => {
       setIsLoggingIn(false);
       toast.success("Login successful!");
@@ -133,7 +131,6 @@ const Auction = () => {
   };
 
   const handleStopButtonClick = async (event) => {
-    // event.preventDefault()
     const data = {
       id: auctions.length > 0 && auctions[auctions.length - 1].id,
     };
@@ -265,8 +262,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Start"
-                        ? true
-                        : false
+                      ? true
+                      : false
                   }
                 >
                   Start Auction
@@ -280,8 +277,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                        ? true
-                        : auctions[auctions.length - 1].status !== "pending" &&
+                      ? true
+                      : auctions[auctions.length - 1].status !== "pending" &&
                         true
                   }
                 >
@@ -297,26 +294,20 @@ const Auction = () => {
                 </Button>
                 <hr />
                 <p className="price-text"> current price</p>
-                {bidders.filter((bid) => bid.auction_id === auctions[auctions.length - 1].id).map(data => (
-                  <div className="price-container">
-                    <div>
-                      <p>{data.name}</p>
+                {bidders
+                  .filter(
+                    (bid) => bid.auction_id === auctions[auctions.length - 1].id
+                  )
+                  .map((data) => (
+                    <div className="price-container">
+                      <div>
+                        <p>{data.name}</p>
+                      </div>
+                      <div>
+                        <p>${data.amount}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p>${data.amount}</p>
-                    </div>
-                  </div>
-                ))}
-                {/* {bidders.map((bid) => (
-                  <div className="price-container">
-                    <div>
-                      <p>{bid.name}</p>
-                    </div>
-                    <div>
-                      <p>${bid.amount}</p>
-                    </div>
-                  </div>
-                ))} */}
+                  ))}
               </Form>
             </Modal.Body>
             <Modal.Footer>

@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import {
   Card,
   Button,
   Form,
   Modal,
-  Row,
-  Col,
   Container,
   Alert,
   Spinner,
@@ -29,7 +26,6 @@ const Bidder = () => {
   const [bidders, setBidders] = useState([]);
   const [bidAmount, setBidAmount] = useState();
   const [userType, setUserType] = useState();
-  const currentUser = JSON.parse(localStorage.getItem("users"));
   const [showValidation, setShowValidation] = useState(false);
   const [bidStatus, setBidStatus] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -73,13 +69,11 @@ const Bidder = () => {
         userType: "Biddder",
       };
       await api.post(`login`, data);
-      localStorage.setItem("users", JSON.stringify(data));
       setTimeout(() => {
         setIsLoggingIn(false);
         toast.success("Login successful!");
         setShowBidderModal(true);
       }, 2000);
-      // setShowBidderModal(true);
       setBidAmount(
         auctions.length > 0 && bidders.length === 0
           ? parseInt(auctions[auctions.length - 1].price) + 100
