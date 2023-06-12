@@ -127,14 +127,13 @@ const Bidder = () => {
                 placeholder="Enter name"
                 value={bidderName}
                 onChange={handleNameChange}
-                // onChange={(event) => setBidderName(event.target.value)}
               />
             </Form.Group>
             <Button
               variant="primary"
               type="submit"
               disabled={isLoggingIn}
-              style={{ width: "57vh" }}
+              className="all-button"
             >
               {isLoggingIn ? (
                 <>

@@ -11,7 +11,6 @@ import {
   Spinner,
 } from "react-bootstrap";
 import "./style.css";
-import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import socketIo from "socket.io-client";
@@ -126,24 +125,38 @@ const Auction = () => {
                       onChange={handleNameChange}
                     />
                   </Form.Group>
-
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    disabled={isLoggingIn}
-                    style={{ width: "28vh" }}
-                  >
-                    {isLoggingIn ? (
-                      <>
-                        <Spinner animation="border" size="sm" /> Logging in...
-                      </>
-                    ) : (
-                      "Auction Login"
-                    )}
-                  </Button>
-                  <Link className="bidder-buttton" to="/bidder">
-                    Bidder Login
-                  </Link>
+                  <Row>
+                    <Col>
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        disabled={isLoggingIn}
+                        className="all-button"
+                      >
+                        {isLoggingIn ? (
+                          <>
+                            <Spinner animation="border" size="sm" /> Logging
+                            in...
+                          </>
+                        ) : (
+                          "Auction Login"
+                        )}
+                      </Button>
+                    </Col>
+                    <Col>
+                      {/* <Link className="bidder-buttton" to="/bidder">
+                        Bidder Login
+                      </Link> */}
+                      <Button
+                        className="all-button"
+                        onClick={() => {
+                          window.location.href = "/bidder";
+                        }}
+                      >
+                        Bidder Login
+                      </Button>
+                    </Col>
+                  </Row>
                 </Form>
               </Card.Body>
             </Card>

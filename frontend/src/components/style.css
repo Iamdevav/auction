@@ -1,5 +1,3 @@
-.price {
-}
 .container-box {
   margin-top: 100px;
 }
@@ -44,6 +42,9 @@
 }
 .auction-button {
   width: "28vh";
+}
+.all-button {
+  width: 100%;
 }
 .card {
   width: 40%;
