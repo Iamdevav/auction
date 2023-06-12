@@ -164,12 +164,12 @@ const Bidder = () => {
             <Form.Group controlId="startingPrice" className="mb-3">
               <Form.Label>Current Price</Form.Label>
               <div className="price-container">
-                {bidders.length !== 0 && (
+                {bidders.length !== 0 ?
                   <p>
-                    {/* {bidders[bidders.length - 1].name} - $ */}$
+                    $
                     {bidders[bidders.length - 1].amount}
                   </p>
-                )}
+                  : '$' + auctions[0]?.price}
               </div>
             </Form.Group>
             <Form.Group controlId="itemName">
@@ -196,7 +196,7 @@ const Bidder = () => {
                   bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
-                        bidders[bidders.length - 1].amount + 100
+                    bidders[bidders.length - 1].amount + 100
                 )
               }
               disabled={
