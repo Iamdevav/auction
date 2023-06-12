@@ -102,7 +102,7 @@ const Auction = () => {
   };
   const handleAuctionStatus = async (status) => {
     const data = {
-      id: auctions.length > 0 && auctions[0].id,
+      id: auctions.length > 0 && auctions[auctions.length - 1].id,
     };
     const updatedData = {
       status: status,
@@ -118,7 +118,7 @@ const Auction = () => {
   const handleStartButtonClick = async (event) => {
     event.preventDefault();
     const data = {
-      id: auctions.length > 0 && auctions[0].id,
+      id: auctions.length > 0 && auctions[auctions.length - 1].id,
     };
     const updatedData = {
       status: "pending",
@@ -135,7 +135,7 @@ const Auction = () => {
   const handleStopButtonClick = async (event) => {
     // event.preventDefault()
     const data = {
-      id: auctions.length > 0 && auctions[0].id,
+      id: auctions.length > 0 && auctions[auctions.length - 1].id,
     };
     const updatedData = {
       status: "pending",
@@ -148,6 +148,11 @@ const Auction = () => {
       setAuctionStatus(false);
     }, [1000]);
   };
+
+  const handleAddAuction = () => {
+    setAuctions([])
+    setBidders([])
+  }
 
   return (
     <Container className="container-box">
@@ -259,9 +264,9 @@ const Auction = () => {
                   disabled={
                     auctions.length === 0
                       ? false
-                      : auctions[0]?.buttonStatus === "Start"
-                      ? true
-                      : false
+                      : auctions[auctions.length - 1]?.buttonStatus === "Start"
+                        ? true
+                        : false
                   }
                 >
                   Start Auction
@@ -274,12 +279,27 @@ const Auction = () => {
                   disabled={
                     auctions.length === 0
                       ? false
-                      : auctions[0]?.buttonStatus === "Stop"
-                      ? true
-                      : auctions[0].status !== "pending" && true
+                      : auctions[auctions.length - 1]?.buttonStatus === "Stop"
+                        ? true
+                        : auctions[auctions.length - 1].status !== "pending" && true
                   }
                 >
                   Stop Auction
+                </Button>
+                <Button
+                  className="stop-button"
+                  variant="success"
+                  type="button"
+                  onClick={() => handleAddAuction()}
+                  disabled={
+                    auctions.length === 0
+                      ? false
+                      : auctions[auctions.length - 1]?.buttonStatus === "Stop"
+                        ? true
+                        : auctions[auctions.length - 1].status !== "pending" && true
+                  }
+                >
+                  Add Auction
                 </Button>
                 <hr />
                 <p className="price-text"> current price</p>
@@ -301,7 +321,7 @@ const Auction = () => {
                 disabled={
                   auctions.length === 0
                     ? true
-                    : auctions[0].status !== "pending" && true
+                    : auctions[auctions.length - 1].status !== "pending" && true
                 }
                 onClick={() => handleAuctionStatus("no_sale")}
               >
@@ -312,7 +332,7 @@ const Auction = () => {
                 disabled={
                   auctions.length === 0
                     ? true
-                    : auctions[0].status !== "pending" && true
+                    : auctions[auctions.length - 1].status !== "pending" && true
                 }
                 onClick={() => handleAuctionStatus("sold")}
               >
