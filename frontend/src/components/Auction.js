@@ -72,6 +72,7 @@ const Auction = () => {
         const data = {
             name: itemName,
             price: startingPrice,
+            buttonStatus: 'Start'
         };
         await api.post("auctions", data);
         setAuctionStatus(true)
@@ -250,7 +251,7 @@ const Auction = () => {
                                 <Button
                                     className="stop-button"
                                     variant="danger"
-                                    type="submit"
+                                    type="button"
                                     onClick={() => handleStopButtonClick()}
                                     disabled={auctions.length === 0 ? false : auctions[0]?.buttonStatus === "Stop" ? true : false}
                                 >
