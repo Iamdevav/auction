@@ -195,9 +195,10 @@ const Bidder = () => {
                   bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
-                        bidders[bidders.length - 1].amount + 100
+                    bidders[bidders.length - 1].amount + 100
                 )
               }
+              disabled={auctions.length !== 0 && auctions[0].buttonStatus === "Stop" ? true : false}
             >
               You Paid {bidAmount}
             </Button>
@@ -206,12 +207,14 @@ const Bidder = () => {
               onClick={() => {
                 setBidAmount(parseInt(bidAmount) + 500);
               }}
+              disabled={auctions.length !== 0 && auctions[0].buttonStatus === "Stop" ? true : false}
             >
               +500
             </Button>
             <Button
               variant="white"
               onClick={() => setBidAmount(parseInt(bidAmount) + 1000)}
+              disabled={auctions.length !== 0 && auctions[0].buttonStatus === "Stop" ? true : false}
             >
               +1000
             </Button>
@@ -220,6 +223,7 @@ const Bidder = () => {
               onClick={() =>
                 setBidAmount(bidders[bidders.length - 1].amount + 100)
               }
+              disabled={auctions.length !== 0 && auctions[0].buttonStatus === "Stop" ? true : false}
             >
               Reset
             </Button>
