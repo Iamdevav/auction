@@ -157,14 +157,14 @@ const Bidder = () => {
               <Form.Label>Your Name &nbsp;&nbsp;- </Form.Label>
               <Form.Label className="product-name">{bidderName}</Form.Label>
             </Form.Group>
-            <Form.Group controlId="itemName">
+            {auctions.length > 0 && <Form.Group controlId="itemName">
               <Form.Label>Auction Item - </Form.Label>
               <Form.Label className="product-name">
                 <Form.Label>
                   {auctions.length > 0 && auctions[0].name}
                 </Form.Label>
               </Form.Label>
-            </Form.Group>
+            </Form.Group>}
             {auctions.length === 0 && "There is no Auction item"}
             {auctions.length > 0 && (
               <Form.Group controlId="startingPrice" className="mb-3">
@@ -183,7 +183,7 @@ const Bidder = () => {
             )}
             {auctions.length > 0 && (
               <Form.Group controlId="itemName">
-                <Form.Label>Auction Item Current Status</Form.Label>
+                <Form.Label>Auction Item Current Status : {auctions[0]?.buttonStatus === "Stop" ? "Stop Auction" : auctions[0].status !== "pending" && auctions[0].status}</Form.Label>
                 {bidders.map((bid) => (
                   <div className="price-container">
                     <div>
@@ -207,15 +207,15 @@ const Bidder = () => {
                   bidders.length === 0
                     ? parseInt(auctions[0].price) + 100
                     : bidders.length > 0 &&
-                        bidders[bidders.length - 1].amount + 100
+                    bidders[bidders.length - 1].amount + 100
                 )
               }
               disabled={
                 auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
                   ? true
                   : auctions.length === 0
-                  ? true
-                  : false
+                    ? true
+                    : auctions[0].status !== "pending" && true
               }
             >
               You Paid {bidAmount}
@@ -229,8 +229,8 @@ const Bidder = () => {
                 auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
                   ? true
                   : auctions.length === 0
-                  ? true
-                  : false
+                    ? true
+                    : auctions[0].status !== "pending" && true
               }
             >
               +100
@@ -242,8 +242,8 @@ const Bidder = () => {
                 auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
                   ? true
                   : auctions.length === 0
-                  ? true
-                  : false
+                    ? true
+                    : auctions[0].status !== "pending" && true
               }
             >
               +200
@@ -257,8 +257,8 @@ const Bidder = () => {
                 auctions.length !== 0 && auctions[0].buttonStatus === "Stop"
                   ? true
                   : auctions.length === 0
-                  ? true
-                  : false
+                    ? true
+                    : auctions[0].status !== "pending" && true
               }
             >
               Reset
