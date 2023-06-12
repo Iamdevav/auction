@@ -81,11 +81,11 @@ const Bidder = () => {
       );
     }
   };
-  const handlebidderModalSubmit = async (event, bidPrice) => {
+  const handlebidderModalSubmit = async (event) => {
     event.preventDefault();
     const data = {
       auction_id: auctions.length > 0 && auctions[auctions.length - 1].id,
-      amount: bidPrice,
+      amount: bidAmount,
       name: bidderName,
     };
     await api.post(`bids`, data);
@@ -216,11 +216,7 @@ const Bidder = () => {
               type="submit"
               onClick={(e) =>
                 handlebidderModalSubmit(
-                  e,
-                  bidders.length === 0
-                    ? parseInt(auctions[auctions.length - 1].price) + 100
-                    : bidders.length > 0 &&
-                      bidders[bidders.length - 1].auction_id === auctions[auctions.length - 1].id ? '$' + bidders[bidders.length - 1].amount + 100 : parseInt(auctions[auctions.length - 1].price) + 100
+                  e
                 )
               }
               disabled={
