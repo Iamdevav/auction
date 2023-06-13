@@ -94,9 +94,17 @@ const Bidder = () => {
       !showWonItemToast
     ) {
       setShowWonItemToast(true);
-      toast.success("Congratulations You won this item!");
+      toast.success("Congratulations! You won this item!");
+    } else if (
+      showWonItemToast &&
+      (auctions.length === 0 ||
+        auctions[auctions.length - 1].status !== "sold" ||
+        bidderName !== bidders[bidders.length - 1]?.name)
+    ) {
+      setShowWonItemToast(false);
     }
   }, [auctions, bidders, bidderName, showWonItemToast]);
+
   // useEffect(() => {
   //   if (
   //     auctions.length > 0 &&
