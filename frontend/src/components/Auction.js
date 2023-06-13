@@ -229,7 +229,7 @@ const Auction = () => {
             centered
           >
             <Modal.Header closeButton>
-              <Modal.Title>Easy Bid</Modal.Title>
+              <Modal.Title>Auction Clerk</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form>
@@ -289,8 +289,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Start"
-                        ? true
-                        : false
+                      ? true
+                      : false
                   }
                 >
                   Start Auction
@@ -304,8 +304,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                        ? true
-                        : auctions[auctions.length - 1].status !== "pending" &&
+                      ? true
+                      : auctions[auctions.length - 1].status !== "pending" &&
                         true
                   }
                 >
@@ -320,13 +320,13 @@ const Auction = () => {
                   Add Item
                 </Button> */}
                 <hr />
-                <p className="headline-text">Base Price</p>
+                <p className="headline-text">Starting Bid</p>
                 <p className="price-text">
                   {auctions.length !== 0 &&
                     auctions[auctions.length - 1]?.name +
-                    "  -  " +
-                    "$" +
-                    auctions[auctions.length - 1]?.price}
+                      "  -  " +
+                      "$" +
+                      auctions[auctions.length - 1]?.price}
                 </p>
                 <hr />
                 <p className="headline-text">Bidding History</p>

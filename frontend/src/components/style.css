@@ -69,6 +69,9 @@
   color: rgb(243, 82, 82);
   font-weight: bolder;
 }
+.price-boxien {
+  width: 10%;
+}
 /* Responsive Styles */
 @media (max-width: 768px) {
   .card {
