@@ -16,6 +16,8 @@ import "react-toastify/dist/ReactToastify.css";
 import socketIo from "socket.io-client";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const ENDPOINT = "http://localhost:5000";
 let socket;
@@ -154,12 +156,23 @@ const Auction = () => {
   return (
     <Container className="container-box">
       <h1 className="heading-text">Bidding Platform</h1>
+
       <div>
         <Row>
           <Col>
             <Card>
               <Card.Body>
-                <Card.Title>Auctioneer Screen</Card.Title>
+                {/* <Card.Title>Auctioneer Screen</Card.Title> */}
+                <div className="back-button">
+                  <div>
+                    <Link to="/">
+                      <FaArrowLeft className="back-icon" />
+                    </Link>
+                  </div>
+                  <div style={{ marginLeft: "10px" }}>
+                    <Card.Title>Auctioneer Screen</Card.Title>
+                  </div>
+                </div>
                 <hr />
                 {showValidation && (
                   <Alert variant="danger">Please enter your name!</Alert>
@@ -193,14 +206,14 @@ const Auction = () => {
                         )}
                       </Button>
                     </Col>
-                    <Col>
+                    {/* <Col>
                       <Button
                         className="all-button"
                         onClick={handleButtonClick}
                       >
                         Bidder Login
                       </Button>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </Form>
               </Card.Body>
@@ -262,8 +275,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Start"
-                        ? true
-                        : false
+                      ? true
+                      : false
                   }
                 >
                   Start Auction
@@ -277,8 +290,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                        ? true
-                        : auctions[auctions.length - 1].status !== "pending" &&
+                      ? true
+                      : auctions[auctions.length - 1].status !== "pending" &&
                         true
                   }
                 >
@@ -294,11 +307,18 @@ const Auction = () => {
                 </Button>
                 <hr />
                 <p className="price-text">Base Price</p>
-                <p className="price-text">{auctions.length !== 0 && auctions[auctions.length - 1]?.name + "  -  " + "$" + auctions[auctions.length - 1]?.price}</p>
+                <p className="price-text">
+                  {auctions.length !== 0 &&
+                    auctions[auctions.length - 1]?.name +
+                      "  -  " +
+                      "$" +
+                      auctions[auctions.length - 1]?.price}
+                </p>
                 <p className="price-text">Bidding History</p>
                 {bidders
                   .filter(
-                    (bid) => bid.auction_id === auctions[auctions.length - 1]?.id
+                    (bid) =>
+                      bid.auction_id === auctions[auctions.length - 1]?.id
                   )
                   .map((data) => (
                     <div className="price-container">
