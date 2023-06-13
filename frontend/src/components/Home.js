@@ -21,7 +21,7 @@ const Home = () => {
           <Col>
             <Card>
               <Card.Body>
-                <Card.Title>Please Choose One</Card.Title>
+                <Card.Title>Choose Your Bidding Platform</Card.Title>
                 <hr />
 
                 <Form>
