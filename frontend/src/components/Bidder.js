@@ -270,7 +270,7 @@ const Bidder = () => {
                             data.auction_id === auctions[auctions.length - 1].id
                         ).length === 0
                           ? "Accepting Bids"
-                          : "You are NOT the highest bidder, Bid again to get back in!"
+                          : "You are NOT the highest bidder!"
                   }
                 </Form.Label>
                 <hr />
