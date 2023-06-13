@@ -100,7 +100,7 @@ const Auction = () => {
   };
   const handleAuctionStatus = async (status) => {
     const data = {
-      id: auctions.length > 0 && auctions[auctions.length - 1].id,
+      id: auctions.length > 0 && auctions[auctions.length - 1]?.id,
     };
     const updatedData = {
       status: status,
@@ -262,8 +262,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Start"
-                      ? true
-                      : false
+                        ? true
+                        : false
                   }
                 >
                   Start Auction
@@ -277,8 +277,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                      ? true
-                      : auctions[auctions.length - 1].status !== "pending" &&
+                        ? true
+                        : auctions[auctions.length - 1].status !== "pending" &&
                         true
                   }
                 >
@@ -290,13 +290,15 @@ const Auction = () => {
                   type="button"
                   onClick={() => handleAddAuction()}
                 >
-                  Add Auction
+                  Add Item
                 </Button>
                 <hr />
-                <p className="price-text"> current price</p>
+                <p className="price-text">Base Price</p>
+                <p className="price-text">{auctions.length !== 0 && auctions[auctions.length - 1]?.name + "  -  " + "$" + auctions[auctions.length - 1]?.price}</p>
+                <p className="price-text">Bidding History</p>
                 {bidders
                   .filter(
-                    (bid) => bid.auction_id === auctions[auctions.length - 1].id
+                    (bid) => bid.auction_id === auctions[auctions.length - 1]?.id
                   )
                   .map((data) => (
                     <div className="price-container">
