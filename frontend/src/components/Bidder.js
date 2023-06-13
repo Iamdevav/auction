@@ -105,29 +105,6 @@ const Bidder = () => {
     }
   }, [auctions, bidders, bidderName, showWonItemToast]);
 
-  // useEffect(() => {
-  //   if (
-  //     auctions.length > 0 &&
-  //     auctions[auctions.length - 1].status === "sold" &&
-  //     bidderName === bidders[bidders.length - 1]?.name &&
-  //     !showWonItemToast
-  //   ) {
-  //     setShowWonItemToast(true);
-  //     toast.success("You won this item!");
-  //   }
-  //   if (
-  //     auctions.length > 0 &&
-  //     auctions[auctions.length - 1].status === "pending" &&
-  //     bidders[bidders.length - 1]?.name !== bidderName &&
-  //     !showWonItemToast
-  //   ) {
-  //     setShowWonItemToast(true);
-  //     console.log("heloo toast");
-  //     toast.warning(
-  //       "You are NOT the highest bidder, Bid again to get back in!"
-  //     );
-  //   }
-  // }, [auctions, bidders, bidderName, showWonItemToast]);
   const handlebidderModalSubmit = async (event) => {
     event.preventDefault();
     const data = {
@@ -256,24 +233,6 @@ const Bidder = () => {
             {auctions.length > 0 && (
               <Form.Group controlId="item-name">
                 <Form.Label> Auction Item Current Status -</Form.Label>
-                {/* <Form.Label className="current-status">
-                  {auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                    ? "Stop Auction"
-                    : auctions[auctions.length - 1].status !== "pending"
-                    ? auctions[auctions.length - 1]?.status === "sold"
-                      ? bidderName === bidders[bidders.length - 1]?.name
-                        ? `You won this item for $${bidAmount}!`
-                        : auctions[auctions.length - 1]?.status
-                      : auctions[auctions.length - 1]?.status
-                    : bidders[bidders.length - 1]?.name === bidderName
-                    ? "You are the highest bidder."
-                    : bidders.filter(
-                        (data) =>
-                          data.auction_id === auctions[auctions.length - 1].id
-                      ).length === 0
-                    ? "Accepting Bids"
-                    : "You are NOT the highest bidder, Bid again to get back in!"}
-                </Form.Label> */}
                 <Form.Label className="current-status">
                   {auctions[auctions.length - 1]?.buttonStatus === "Stop"
                     ? "Stop Auction"

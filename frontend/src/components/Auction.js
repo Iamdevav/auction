@@ -15,7 +15,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import socketIo from "socket.io-client";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -23,7 +22,6 @@ const ENDPOINT = "http://localhost:5000";
 let socket;
 
 const Auction = () => {
-  const navigate = useNavigate();
   const [auctioneerName, setAuctioneerName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [itemName, setItemName] = useState("");
@@ -90,9 +88,6 @@ const Auction = () => {
 
   const handleModalClose = () => {
     setShowModal(false);
-  };
-  const handleButtonClick = () => {
-    navigate("/bidder");
   };
   const handleNameChange = (event) => {
     if (showValidation) {
@@ -205,14 +200,6 @@ const Auction = () => {
                         )}
                       </Button>
                     </Col>
-                    {/* <Col>
-                      <Button
-                        className="all-button"
-                        onClick={handleButtonClick}
-                      >
-                        Bidder Login
-                      </Button>
-                    </Col> */}
                   </Row>
                 </Form>
               </Card.Body>
@@ -311,14 +298,7 @@ const Auction = () => {
                 >
                   Stop Auction
                 </Button>
-                {/* <Button
-                  className="stop-button"
-                  variant="success"
-                  type="button"
-                  onClick={() => handleAddAuction()}
-                >
-                  Add Item
-                </Button> */}
+
                 <hr />
                 <p className="headline-text">Starting Bid</p>
                 <p className="price-text">
