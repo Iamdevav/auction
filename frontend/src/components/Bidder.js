@@ -95,7 +95,7 @@ const Bidder = () => {
     };
     const bidAmountCheck =
       bidders.length !== 0
-        ? bidders[bidders.length - 1]?.amount
+        ? auctions[auctions.length - 1].id === bidders[bidders.length - 1].auction_id ? bidders[bidders.length - 1]?.amount : auctions[auctions.length - 1]?.price
         : auctions[auctions.length - 1].price;
     if (bidAmountCheck >= bidAmount) {
       return toast.error("Amount must be more than current price");
