@@ -162,7 +162,6 @@ const Auction = () => {
           <Col>
             <Card>
               <Card.Body>
-                {/* <Card.Title>Auctioneer Screen</Card.Title> */}
                 <div className="back-button">
                   <div>
                     <Link to="/">
@@ -223,7 +222,12 @@ const Auction = () => {
         </Row>
         {/* aution model --------------------------- */}
         {userType === "Auctioneer" && (
-          <Modal show={showModal} onHide={handleModalClose} centered>
+          <Modal
+            show={showModal}
+            onHide={handleModalClose}
+            backdrop="static"
+            centered
+          >
             <Modal.Header closeButton>
               <Modal.Title>Easy Bid</Modal.Title>
             </Modal.Header>
@@ -235,7 +239,17 @@ const Auction = () => {
                     {" "}
                     {auctioneerName}
                   </Form.Label>
+                  <Button
+                    className="add-button text-white"
+                    // class="btn btn-outline-success"
+                    variant="info"
+                    type="button"
+                    onClick={() => handleAddAuction()}
+                  >
+                    Add Item
+                  </Button>
                 </Form.Group>
+
                 <Form.Group controlId="itemName">
                   <Form.Label>Auction Item </Form.Label>
                   <Form.Control
@@ -297,16 +311,16 @@ const Auction = () => {
                 >
                   Stop Auction
                 </Button>
-                <Button
+                {/* <Button
                   className="stop-button"
                   variant="success"
                   type="button"
                   onClick={() => handleAddAuction()}
                 >
                   Add Item
-                </Button>
+                </Button> */}
                 <hr />
-                <p className="price-text">Base Price</p>
+                <p className="headline-text">Base Price</p>
                 <p className="price-text">
                   {auctions.length !== 0 &&
                     auctions[auctions.length - 1]?.name +
@@ -314,7 +328,8 @@ const Auction = () => {
                       "$" +
                       auctions[auctions.length - 1]?.price}
                 </p>
-                <p className="price-text">Bidding History</p>
+                <hr />
+                <p className="headline-text">Bidding History</p>
                 {bidders
                   .filter(
                     (bid) =>
@@ -326,7 +341,7 @@ const Auction = () => {
                         <p>{data.name}</p>
                       </div>
                       <div>
-                        <p>${data.amount}</p>
+                        <p className="product-name">${data.amount}</p>
                       </div>
                     </div>
                   ))}

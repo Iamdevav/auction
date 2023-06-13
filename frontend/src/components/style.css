@@ -9,8 +9,13 @@
 .row-container {
   margin-top: 10px;
 }
-.price-text {
+.headline-text {
   justify-content: center;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 400;
+}
+.price-text {
   text-align: center;
 }
 .price-container {
@@ -21,6 +26,10 @@
 }
 .stop-button {
   margin-left: 10px;
+}
+.add-button {
+  margin-left: 50%;
+  /* color: aliceblue; */
 }
 .bidder-buttton {
   color: aliceblue;
@@ -65,10 +74,18 @@
   .card {
     width: 80%;
   }
+  .add-button {
+    margin-left: 35%;
+    /* color: aliceblue; */
+  }
 }
 
 @media (max-width: 576px) {
   .card {
     width: 100%;
+  }
+  .add-button {
+    margin-left: 35%;
+    /* color: aliceblue; */
   }
 }

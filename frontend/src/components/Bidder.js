@@ -29,6 +29,7 @@ const Bidder = () => {
   const [showValidation, setShowValidation] = useState(false);
   const [bidStatus, setBidStatus] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [showWonItemToast, setShowWonItemToast] = useState(false);
 
   useEffect(() => {
     socket = socketIo(ENDPOINT, { transports: ["websocket"] });
@@ -79,9 +80,9 @@ const Bidder = () => {
           ? parseInt(auctions[auctions.length - 1].price) + 100
           : bidders[bidders.length - 1]?.auction_id ===
             auctions[auctions.length - 1]?.id
-            ? bidders.length !== 0 &&
+          ? bidders.length !== 0 &&
             parseInt(bidders[bidders.length - 1].amount) + 100
-            : parseInt(auctions[auctions.length - 1].price) + 100
+          : parseInt(auctions[auctions.length - 1].price) + 100
       );
     }
   };
@@ -92,9 +93,12 @@ const Bidder = () => {
       amount: bidAmount,
       name: bidderName,
     };
-    const bidAmountCheck = bidders.length !== 0 ? bidders[bidders.length - 1]?.amount : auctions[auctions.length - 1].price
+    const bidAmountCheck =
+      bidders.length !== 0
+        ? bidders[bidders.length - 1]?.amount
+        : auctions[auctions.length - 1].price;
     if (bidAmountCheck >= bidAmount) {
-      return toast.error("Amount must be more than current price")
+      return toast.error("Amount must be more than current price");
     }
     await api.post(`bids`, data);
     setBidStatus(true);
@@ -187,7 +191,7 @@ const Bidder = () => {
                 {bidders.length !== 0 ? (
                   <Form.Label>
                     {bidders[bidders.length - 1].auction_id ===
-                      auctions[auctions.length - 1].id
+                    auctions[auctions.length - 1].id
                       ? "$" + bidders[bidders.length - 1].amount
                       : auctions[auctions.length - 1].price}
                   </Form.Label>
@@ -202,16 +206,52 @@ const Bidder = () => {
             {auctions.length > 0 && (
               <Form.Group controlId="item-name">
                 <Form.Label> Auction Item Current Status -</Form.Label>
+                {/* <Form.Label className="current-status">
+                  {auctions[auctions.length - 1]?.buttonStatus === "Stop"
+                    ? "Stop Auction"
+                    : auctions[auctions.length - 1].status !== "pending"
+                    ? auctions[auctions.length - 1]?.status === "sold"
+                      ? bidderName === bidders[bidders.length - 1]?.name
+                        ? `You won this item for $${bidAmount}!`
+                        : auctions[auctions.length - 1]?.status
+                      : auctions[auctions.length - 1]?.status
+                    : bidders[bidders.length - 1]?.name === bidderName
+                    ? "You are the highest bidder."
+                    : bidders.filter(
+                        (data) =>
+                          data.auction_id === auctions[auctions.length - 1].id
+                      ).length === 0
+                    ? "Accepting Bids"
+                    : "You are NOT the highest bidder, Bid again to get back in!"}
+                </Form.Label> */}
+
                 <Form.Label className="current-status">
                   {auctions[auctions.length - 1]?.buttonStatus === "Stop"
                     ? "Stop Auction"
-                    : auctions[auctions.length - 1].status !== "pending" ?
-                      auctions[auctions.length - 1]?.status === "sold" ? bidderName === bidders[bidders.length - 1]?.name ? `You won this item for $${bidAmount}!` : auctions[auctions.length - 1]?.status : auctions[auctions.length - 1]?.status : bidders[bidders.length - 1]?.name === bidderName ? "You are the highest bidder." : bidders.filter((data) => data.auction_id === auctions[auctions.length - 1].id).length === 0 ? "Accepting Bids" : "You are NOT the highest bidder, Bid again to get back in!"}
+                    : auctions[auctions.length - 1].status !== "pending"
+                    ? auctions[auctions.length - 1]?.status === "sold"
+                      ? bidderName === bidders[bidders.length - 1]?.name
+                        ? (() => {
+                            if (!showWonItemToast) {
+                              setShowWonItemToast(true);
+                              toast.success("You won this item!");
+                            }
+                            return `You won this item for $${bidAmount}!`;
+                          })()
+                        : auctions[auctions.length - 1]?.status
+                      : auctions[auctions.length - 1]?.status
+                    : bidders[bidders.length - 1]?.name === bidderName
+                    ? "You are the highest bidder."
+                    : bidders.filter(
+                        (data) =>
+                          data.auction_id === auctions[auctions.length - 1].id
+                      ).length === 0
+                    ? "Accepting Bids"
+                    : "You are NOT the highest bidder, Bid again to get back in!"}
                 </Form.Label>
-
+                <hr />
                 {bidders[bidders.length - 1]?.auction_id ===
-                  auctions[auctions.length - 1].id
-                  ?
+                auctions[auctions.length - 1].id ? (
                   <div className="price-container">
                     <div>
                       <p>{bidders[bidders.length - 1].name}</p>
@@ -220,29 +260,39 @@ const Bidder = () => {
                       <p> {"$" + bidders[bidders.length - 1].amount}</p>
                     </div>
                   </div>
-                  : ''}
+                ) : (
+                  ""
+                )}
               </Form.Group>
             )}
-            <hr />
-            $ <input type="number" className="text-center col-sm-3" disabled={
-              auctions.length !== 0 &&
+            <hr />${" "}
+            <input
+              type="number"
+              className="text-center "
+              style={{ width: "30%" }}
+              disabled={
+                auctions.length !== 0 &&
                 auctions[auctions.length - 1].buttonStatus === "Stop"
-                ? true
-                : auctions.length === 0
+                  ? true
+                  : auctions.length === 0
                   ? true
                   : auctions[auctions.length - 1].status !== "pending" && true
-            } value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} />
+              }
+              value={bidAmount}
+              onChange={(e) => setBidAmount(e.target.value)}
+            />
             <Button
               variant="primary"
               type="submit"
+              className="extra-button"
               onClick={(e) => handlebidderModalSubmit(e)}
               disabled={
                 auctions.length !== 0 &&
-                  auctions[auctions.length - 1].buttonStatus === "Stop"
+                auctions[auctions.length - 1].buttonStatus === "Stop"
                   ? true
                   : auctions.length === 0
-                    ? true
-                    : auctions[auctions.length - 1].status !== "pending" && true
+                  ? true
+                  : auctions[auctions.length - 1].status !== "pending" && true
               }
             >
               Bid
@@ -255,11 +305,11 @@ const Bidder = () => {
               }}
               disabled={
                 auctions.length !== 0 &&
-                  auctions[auctions.length - 1].buttonStatus === "Stop"
+                auctions[auctions.length - 1].buttonStatus === "Stop"
                   ? true
                   : auctions.length === 0
-                    ? true
-                    : auctions[auctions.length - 1].status !== "pending" && true
+                  ? true
+                  : auctions[auctions.length - 1].status !== "pending" && true
               }
             >
               +100
@@ -270,11 +320,11 @@ const Bidder = () => {
               onClick={() => setBidAmount(parseInt(bidAmount) + 200)}
               disabled={
                 auctions.length !== 0 &&
-                  auctions[auctions.length - 1].buttonStatus === "Stop"
+                auctions[auctions.length - 1].buttonStatus === "Stop"
                   ? true
                   : auctions.length === 0
-                    ? true
-                    : auctions[auctions.length - 1].status !== "pending" && true
+                  ? true
+                  : auctions[auctions.length - 1].status !== "pending" && true
               }
             >
               +200
@@ -287,11 +337,11 @@ const Bidder = () => {
               }
               disabled={
                 auctions.length !== 0 &&
-                  auctions[auctions.length - 1].buttonStatus === "Stop"
+                auctions[auctions.length - 1].buttonStatus === "Stop"
                   ? true
                   : auctions.length === 0
-                    ? true
-                    : auctions[auctions.length - 1].status !== "pending" && true
+                  ? true
+                  : auctions[auctions.length - 1].status !== "pending" && true
               }
             >
               Reset
