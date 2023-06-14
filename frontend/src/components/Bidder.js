@@ -98,19 +98,26 @@ const Bidder = () => {
   }, [auctions, bidders, bidderName, showBidAgainToast]);
 
   useEffect(() => {
-    const data1 = bidders.filter((item,
-      index) => (bidders.indexOf(item.id) === index));
-
-    console.log(data1)
     if (bidders.filter(data => data.auction_id === auctions[auctions.length - 1].id).length !== 0 && (auctions[auctions.length - 1]?.status === "pending" && bidders[bidders.length - 1]?.name !== bidderName)) {
-      // console.log(loginData)
-      if (bidders.filter(data => data.auction_id === auctions[auctions.length - 1].id).length > parseInt(loginData.id)) {
-        toast.warning("You have been outbid! Bid again!")
+
+      const data1 = bidders.filter((elem, ix) => bidders.findIndex(elem1 => elem1.name == elem.name) === ix);
+      for (var i in data1) {
+        if (data1.filter(item => item.name !== data1[i]?.name)) {
+          const bidderRecord = bidders.filter((elem, ix) => bidders.findIndex(elem1 => elem1.name == elem.name) === ix);
+
+          const bid = bidders.filter(data => data.auction_id === auctions[auctions.length - 1].id)
+
+          for (var j = 0; j < bidderRecord.length; j++) {
+            if (bidderRecord[j].name === bid[i].name && bid[i].name === bidderName) {
+              toast.warning("You have been outbid! Bid again!")
+            } else {
+              if ((bidderRecord[i].name !== bidders[bidders.length - 1].name && bid[i].name === bidderName)) {
+                toast.warning("You have been outbid! Bid again!")
+              }
+            }
+          }
+        }
       }
-      // const data1 = bidders.filter(data => data.auction_id === auctions[auctions.length - 1].id)
-
-
-
     }
   }, [bidders.length])
 
