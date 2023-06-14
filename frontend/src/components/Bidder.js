@@ -152,7 +152,7 @@ const Bidder = () => {
         name: bidderName,
         userType: "Biddder",
       };
-      const res = await api.post(`login`, data);
+      await api.post(`login`, data);
       setTimeout(() => {
         setIsLoggingIn(false);
         toast.success("Login successful!");
