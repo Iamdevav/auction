@@ -50,13 +50,13 @@ io.on("connect", async function (socket) {
 const getBidData = () => {
   try {
     return bids;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 const getAuctionData = () => {
   try {
     return auctions;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 // CRUD for USERS

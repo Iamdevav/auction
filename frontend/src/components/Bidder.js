@@ -31,6 +31,9 @@ const Bidder = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showWonItemToast, setShowWonItemToast] = useState(false);
   const [showBidAgainToast, setShowBidAgainToast] = useState(false);
+  const [loginData, setLoginData] = useState();
+  const [message, setMessage] = useState();
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     socket = socketIo(ENDPOINT, { transports: ["websocket"] });
@@ -57,36 +60,6 @@ const Bidder = () => {
     });
   }, [bidStatus]);
 
-  const handleBidderSubmit = async (event) => {
-    event.preventDefault();
-    if (bidderName.trim() === "") {
-      setShowValidation(true);
-      return;
-    }
-    setIsLoggingIn(true);
-    if (bidderName) {
-      setUserType("Bidder");
-      const data = {
-        name: bidderName,
-        userType: "Biddder",
-      };
-      await api.post(`login`, data);
-      setTimeout(() => {
-        setIsLoggingIn(false);
-        toast.success("Login successful!");
-        setShowBidderModal(true);
-      }, 2000);
-      setBidAmount(
-        auctions.length > 0 && bidders.length === 0
-          ? parseInt(auctions[auctions.length - 1].price) + 100
-          : bidders[bidders.length - 1]?.auction_id ===
-            auctions[auctions.length - 1]?.id
-          ? bidders.length !== 0 &&
-            parseInt(bidders[bidders.length - 1].amount) + 100
-          : parseInt(auctions[auctions.length - 1].price) + 100
-      );
-    }
-  };
   useEffect(() => {
     if (
       auctions.length > 0 &&
@@ -105,10 +78,11 @@ const Bidder = () => {
       setShowWonItemToast(false);
     }
   }, [auctions, bidders, bidderName, showWonItemToast]);
+
   useEffect(() => {
     if (
       auctions.length > 0 &&
-      auctions[auctions.length - 1].status !== "pending" &&
+      auctions[auctions.length - 1].status === "sold" &&
       bidders[bidders.length - 1]?.name !== bidderName &&
       !showBidAgainToast
     ) {
@@ -124,6 +98,80 @@ const Bidder = () => {
       setShowBidAgainToast(false);
     }
   }, [auctions, bidders, bidderName, showBidAgainToast]);
+
+  useEffect(() => {
+    let hasOutbid = false;
+
+    if (
+      bidders.filter(
+        (data) => data.auction_id === auctions[auctions.length - 1]?.id
+      ).length !== 0 &&
+      auctions[auctions.length - 1]?.status === "pending" &&
+      bidders[bidders.length - 1]?.name !== bidderName
+    ) {
+      const uniqueBidders = bidders.filter(
+        (elem, ix) =>
+          bidders.findIndex((elem1) => elem1.name === elem.name) === ix
+      );
+
+      for (let i = 0; i < uniqueBidders.length; i++) {
+        const bid = bidders.filter(
+          (data) => data.auction_id === auctions[auctions.length - 1]?.id
+        );
+
+        if (
+          uniqueBidders[i].name === bid[i]?.name &&
+          bid[i]?.name === bidderName
+        ) {
+          hasOutbid = true;
+          break;
+        } else if (
+          uniqueBidders[i].name !== bidders[bidders.length - 1]?.name &&
+          bid[i]?.name === bidderName
+        ) {
+          hasOutbid = true;
+          break;
+        }
+      }
+    }
+
+    if (hasOutbid) {
+      setMessage("You have been outbid! Bid again!");
+      toast.warning("You have been outbid! Bid again!");
+    }
+  }, [bidders.length]);
+
+  const handleBidderSubmit = async (event) => {
+    event.preventDefault();
+    if (bidderName.trim() === "") {
+      setShowValidation(true);
+      return;
+    }
+    setIsLoggingIn(true);
+    if (bidderName) {
+      setUserType("Bidder");
+      const data = {
+        name: bidderName,
+        userType: "Biddder",
+      };
+      const res = await api.post(`login`, data);
+      setLoginData(res.data);
+      setTimeout(() => {
+        setIsLoggingIn(false);
+        toast.success("Login successful!");
+        setShowBidderModal(true);
+      }, 2000);
+      setBidAmount(
+        auctions.length > 0 && bidders.length === 0
+          ? parseInt(auctions[auctions.length - 1].price) + 100
+          : bidders[bidders.length - 1]?.auction_id ===
+            auctions[auctions.length - 1]?.id
+          ? bidders.length !== 0 &&
+            parseInt(bidders[bidders.length - 1].amount) + 100
+          : parseInt(auctions[auctions.length - 1].price) + 100
+      );
+    }
+  };
 
   const handlebidderModalSubmit = async (event) => {
     event.preventDefault();
@@ -268,10 +316,12 @@ const Bidder = () => {
                     ? "You are the highest bidder."
                     : bidders.filter(
                         (data) =>
-                          data.auction_id === auctions[auctions.length - 1].id
+                          data.auction_id === auctions[auctions.length - 1]?.id
                       ).length === 0
                     ? "Accepting Bids"
-                    : "You are NOT the highest bidder!"}
+                    : !message
+                    ? "Accepting Bids"
+                    : message}
                 </Form.Label>
                 <hr />
                 <p className="headline-text">Bidding History</p>
