@@ -32,6 +32,7 @@ const Bidder = () => {
   const [showWonItemToast, setShowWonItemToast] = useState(false);
   const [showBidAgainToast, setShowBidAgainToast] = useState(false);
   const [loginData, setLoginData] = useState()
+  const [message, setMessage] = useState()
 
   useEffect(() => {
     socket = socketIo(ENDPOINT, { transports: ["websocket"] });
@@ -110,8 +111,10 @@ const Bidder = () => {
           for (var j = 0; j < bidderRecord.length; j++) {
             if (bidderRecord[j].name === bid[i].name && bid[i].name === bidderName) {
               toast.warning("You have been outbid! Bid again!")
+              setMessage("You have been outbid! Bid again!")
             } else {
               if ((bidderRecord[i].name !== bidders[bidders.length - 1].name && bid[i].name === bidderName)) {
+                setMessage("You have been outbid! Bid again!")
                 toast.warning("You have been outbid! Bid again!")
               }
             }
@@ -299,7 +302,7 @@ const Bidder = () => {
                             data.auction_id === auctions[auctions.length - 1]?.id
                         ).length === 0
                           ? "Accepting Bids"
-                          : bidders.filter(data => data.auction_id === auctions[auctions.length - 1]?.id).length > parseInt(loginData?.id) ? "You are NOT the highest bidder!" : "Accepting Bids"}
+                          : !message ? "Accepting Bids" : message}
                 </Form.Label>
                 <hr />
                 <p className="headline-text">Bidding History</p>
