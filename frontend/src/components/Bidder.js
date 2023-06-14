@@ -31,9 +31,7 @@ const Bidder = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showWonItemToast, setShowWonItemToast] = useState(false);
   const [showBidAgainToast, setShowBidAgainToast] = useState(false);
-  const [loginData, setLoginData] = useState();
   const [message, setMessage] = useState();
-  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     socket = socketIo(ENDPOINT, { transports: ["websocket"] });
@@ -99,50 +97,6 @@ const Bidder = () => {
     }
   }, [auctions, bidders, bidderName, showBidAgainToast]);
 
-  // useEffect(() => {
-  //   if (
-  //     bidders.filter(
-  //       (data) => data.auction_id === auctions[auctions.length - 1].id
-  //     ).length !== 0 &&
-  //     auctions[auctions.length - 1]?.status === "pending" &&
-  //     bidders[bidders.length - 1]?.name !== bidderName
-  //   ) {
-  //     const data1 = bidders.filter(
-  //       (elem, ix) =>
-  //         bidders.findIndex((elem1) => elem1.name == elem.name) === ix
-  //     );
-  //     for (var i in data1) {
-  //       if (data1.filter((item) => item.name !== data1[i]?.name)) {
-  //         const bidderRecord = bidders.filter(
-  //           (elem, ix) =>
-  //             bidders.findIndex((elem1) => elem1.name == elem.name) === ix
-  //         );
-
-  //         const bid = bidders.filter(
-  //           (data) => data.auction_id === auctions[auctions.length - 1].id
-  //         );
-
-  //         for (var j = 0; j < bidderRecord.length; j++) {
-  //           if (
-  //             bidderRecord[j].name === bid[i].name &&
-  //             bid[i].name === bidderName
-  //           ) {
-  //             toast.warning("You have been outbid! Bid again!");
-  //             setMessage("You have been outbid! Bid again!");
-  //           } else {
-  //             if (
-  //               bidderRecord[i].name !== bidders[bidders.length - 1].name &&
-  //               bid[i].name === bidderName
-  //             ) {
-  //               setMessage("You have been outbid! Bid again!");
-  //               toast.warning("You have been outbid! Bid again!");
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }, [bidders.length]);
   useEffect(() => {
     let hasOutbid = false;
 
@@ -199,7 +153,6 @@ const Bidder = () => {
         userType: "Biddder",
       };
       const res = await api.post(`login`, data);
-      setLoginData(res.data);
       setTimeout(() => {
         setIsLoggingIn(false);
         toast.success("Login successful!");
