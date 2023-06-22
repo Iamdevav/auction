@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Card,
   Button,
@@ -116,7 +116,7 @@ const Auction = () => {
     };
     const updatedData = {
       status: "pending",
-      buttonStatus: "Start",
+      // buttonStatus: "Start",
     };
     await api.put(`auctions/${data.id}`, updatedData);
     setAuctionStatus(true);
@@ -141,7 +141,11 @@ const Auction = () => {
       setAuctionStatus(false);
     }, [1000]);
   };
-
+  const filteredBidders = useMemo(() => {
+    return bidders.filter(
+      (bid) => bid.auction_id === auctions[auctions.length - 1]?.id
+    );
+  }, [bidders, auctions]);
   const handleAddAuction = () => {
     setAuctions([]);
     setBidders([]);
@@ -283,13 +287,18 @@ const Auction = () => {
                   type="button"
                   onClick={() => handleStopButtonClick()}
                   disabled={
-                    auctions.length === 0
-                      ? false
-                      : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                      ? true
-                      : auctions[auctions.length - 1].status !== "pending" &&
-                        true
+                    auctions.length === 0 ||
+                    auctions[auctions.length - 1]?.buttonStatus === "Stop" ||
+                    auctions[auctions.length - 1].status !== "pending"
                   }
+                // disabled={
+                //   auctions.length === 0
+                //     ? false
+                //     : auctions[auctions.length - 1]?.buttonStatus === "Stop"
+                //     ? true
+                //     : auctions[auctions.length - 1].status !== "pending" &&
+                //       true
+                // }
                 >
                   Stop Auction
                 </Button>
@@ -299,13 +308,13 @@ const Auction = () => {
                 <p className="price-text">
                   {auctions.length !== 0 &&
                     auctions[auctions.length - 1]?.name +
-                      "  -  " +
-                      "$" +
-                      auctions[auctions.length - 1]?.price}
+                    "  -  " +
+                    "$" +
+                    auctions[auctions.length - 1]?.price}
                 </p>
                 <hr />
                 <p className="headline-text">Bidding History</p>
-                {bidders
+                {/* {bidders
                   .filter(
                     (bid) =>
                       bid.auction_id === auctions[auctions.length - 1]?.id
@@ -319,7 +328,17 @@ const Auction = () => {
                         <p className="product-name">${data.amount}</p>
                       </div>
                     </div>
-                  ))}
+                  ))} */}
+                {filteredBidders.map((data) => (
+                  <div className="price-container" key={data.id}>
+                    <div>
+                      <p>{data.name}</p>
+                    </div>
+                    <div>
+                      <p className="product-name">${data.amount}</p>
+                    </div>
+                  </div>
+                ))}
               </Form>
             </Modal.Body>
             <Modal.Footer>
