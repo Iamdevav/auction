@@ -40,17 +40,20 @@ const notifyWssByAuction = (auctionId) => {
 };
 
 io.on("connect", async function (socket) {
-  const getAuction = await getAuctionData();
+  const getAuction = getAuctionData();
+  // because of we are using socket.io that's why we are using broadcast
   socket.broadcast.emit("getAuction", getAuction);
 
-  const getBid = await getBidData();
+  const getBid = getBidData();
   socket.broadcast.emit("getBids", getBid);
 });
 
 const getBidData = () => {
   try {
     return bids;
-  } catch (error) {}
+  } catch (error) {
+    return error.message;
+  }
 };
 
 const getAuctionData = () => {
@@ -193,7 +196,7 @@ const { PORT = 5000 } = process.env;
 //   console.log();
 //   console.log(`  > Local: \x1b[36mhttp://localhost:\x1b[1m${PORT}/\x1b[0m`);
 // });
-
+// beacuse we are using socket.io we configure socket.io in server that's why i change this server to 'server'
 server.listen(PORT, () => {
   console.log(`  App running in port ${PORT}`);
   console.log();
