@@ -101,32 +101,34 @@ const Bidder = () => {
   }, [auctions, bids, bidderName, showBidAgainToast]);
 
   useEffect(() => {
-    const auction = auctions[auctions?.length - 1]
-
-    const highbid = bids.find(a => a.auction_id === auction?.id)
-    const outbid = auction?.status === 'pending' && highbid && highbid.name !== bidderName
     let hasOutbid = false;
+    const auction = auctions[auctions.length - 1]
 
     if (
-      highbid?.length !== 0 &&
-      outbid
+      bids.filter(
+        (data) => data.auction_id === auction?.id
+      ).length !== 0 &&
+      auction?.status === "pending" &&
+      bids[bids.length - 1]?.name !== bidderName
     ) {
-      const uniquebids = bids.filter(
+      const uniqueBidders = bids.filter(
         (elem, ix) =>
           bids.findIndex((elem1) => elem1.name === elem.name) === ix
       );
 
-      for (let i = 0; i < uniquebids.length; i++) {
-        const bid = highbid
+      for (let i = 0; i < uniqueBidders.length; i++) {
+        const bid = bids.filter(
+          (data) => data.auction_id === auction?.id
+        );
 
         if (
-          uniquebids[i].name === bid[i]?.name &&
+          uniqueBidders[i].name === bid[i]?.name &&
           bid[i]?.name === bidderName
         ) {
           hasOutbid = true;
           break;
         } else if (
-          uniquebids[i].name !== bids[bids.length - 1]?.name &&
+          uniqueBidders[i].name !== bids[bids.length - 1]?.name &&
           bid[i]?.name === bidderName
         ) {
           hasOutbid = true;
@@ -157,11 +159,11 @@ const Bidder = () => {
       userType: "Biddder",
     };
     await api.post(`login`, data);
-    // setTimeout(() => {
-    setIsLoggingIn(false);
-    toast.success("Login successful!");
-    setShowBidderModal(true);
-    // }, 2000);
+    setTimeout(() => {
+      setIsLoggingIn(false);
+      toast.success("Login successful!");
+      setShowBidderModal(true);
+    }, 2000);
     setBidAmount(
       auctions.length > 0 && bids.length === 0
         ? parseInt(auctions[auctions.length - 1]?.price) + 100
@@ -192,6 +194,7 @@ const Bidder = () => {
     }
     await api.post(`bids`, data);
     setBidStatus(true);
+    // This setTimeout method for changing bidStatus value to call useEffect
     setTimeout(() => {
       setBidStatus(false);
       toast.success("Bid successful! You are currently the highest bidder.");

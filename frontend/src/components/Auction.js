@@ -22,7 +22,7 @@ const ENDPOINT = "http://localhost:5000";
 let socket;
 
 const Auction = () => {
-  const [auctioneerName, setAuctioneerName] = useState("");
+  const [clerkName, setClerkName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [itemName, setItemName] = useState("");
   const [startingPrice, setStartingPrice] = useState("");
@@ -45,14 +45,14 @@ const Auction = () => {
 
   const handleAuctioneerSubmit = async (event) => {
     event.preventDefault();
-    if (auctioneerName.trim() === "") {
+    if (clerkName.trim() === "") {
       setShowValidation(true);
       return;
     }
     setIsLoggingIn(true);
     setUserType("Auctioneer");
     const data = {
-      name: auctioneerName,
+      name: clerkName,
       userType: "Auctioneer",
     };
     await api.post(`login`, data);
@@ -92,7 +92,7 @@ const Auction = () => {
     if (showValidation) {
       setShowValidation(false);
     }
-    setAuctioneerName(event.target.value);
+    setClerkName(event.target.value);
   };
   const handleAuctionStatus = async (status) => {
     const data = {
@@ -177,12 +177,12 @@ const Auction = () => {
                   )}
 
                   <Form onSubmit={handleAuctioneerSubmit}>
-                    <Form.Group controlId="auctioneerName" className="mb-4">
+                    <Form.Group controlId="clerkName" className="mb-4">
                       <Form.Label>Name</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Enter name"
-                        value={auctioneerName}
+                        value={clerkName}
                         onChange={handleNameChange}
                       />
                     </Form.Group>
@@ -229,7 +229,7 @@ const Auction = () => {
                   <Form.Label>Your Name -</Form.Label>
                   <Form.Label className="product-name">
                     {" "}
-                    {auctioneerName}
+                    {clerkName}
                   </Form.Label>
                   <Button
                     className="add-button text-white"
