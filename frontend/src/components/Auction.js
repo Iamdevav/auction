@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Card,
   Button,
@@ -22,7 +22,7 @@ const ENDPOINT = "http://localhost:5000";
 let socket;
 
 const Auction = () => {
-  const [auctioneerName, setAuctioneerName] = useState("");
+  const [clerkName, setClerkName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [itemName, setItemName] = useState("");
   const [startingPrice, setStartingPrice] = useState("");
@@ -45,14 +45,14 @@ const Auction = () => {
 
   const handleAuctioneerSubmit = async (event) => {
     event.preventDefault();
-    if (auctioneerName.trim() === "") {
+    if (clerkName.trim() === "") {
       setShowValidation(true);
       return;
     }
     setIsLoggingIn(true);
     setUserType("Auctioneer");
     const data = {
-      name: auctioneerName,
+      name: clerkName,
       userType: "Auctioneer",
     };
     await api.post(`login`, data);
@@ -72,7 +72,6 @@ const Auction = () => {
     const data = {
       name: itemName,
       price: startingPrice,
-      buttonStatus: "Start",
     };
     await api.post("auctions", data);
     setAuctionStatus(true);
@@ -93,7 +92,7 @@ const Auction = () => {
     if (showValidation) {
       setShowValidation(false);
     }
-    setAuctioneerName(event.target.value);
+    setClerkName(event.target.value);
   };
   const handleAuctionStatus = async (status) => {
     const data = {
@@ -117,7 +116,7 @@ const Auction = () => {
     };
     const updatedData = {
       status: "pending",
-      buttonStatus: "Start",
+      // buttonStatus: "Start",
     };
     await api.put(`auctions/${data.id}`, updatedData);
     setAuctionStatus(true);
@@ -142,7 +141,11 @@ const Auction = () => {
       setAuctionStatus(false);
     }, [1000]);
   };
-
+  const filteredBidders = useMemo(() => {
+    return bidders.filter(
+      (bid) => bid.auction_id === auctions[auctions.length - 1]?.id
+    );
+  }, [bidders, auctions]);
   const handleAddAuction = () => {
     setAuctions([]);
     setBidders([]);
@@ -150,63 +153,65 @@ const Auction = () => {
 
   return (
     <Container className="container-box">
-      <h1 className="heading-text">Bidding Platform</h1>
+      <h1 className="heading-text">Bidding Platform 2.0</h1>
 
       <div>
-        <Row>
-          <Col>
-            <Card>
-              <Card.Body>
-                <div className="back-button">
-                  <div>
-                    <Link to="/">
-                      <FaArrowLeft className="back-icon" />
-                    </Link>
+        <div className="flex-container">
+          <Row>
+            <Col>
+              <Card>
+                <Card.Body>
+                  <div className="back-button">
+                    <div>
+                      <Link to="/">
+                        <FaArrowLeft className="back-icon" />
+                      </Link>
+                    </div>
+                    <div style={{ marginLeft: "10px" }}>
+                      <Card.Title>Auctioneer Screen</Card.Title>
+                    </div>
                   </div>
-                  <div style={{ marginLeft: "10px" }}>
-                    <Card.Title>Auctioneer Screen</Card.Title>
-                  </div>
-                </div>
-                <hr />
-                {showValidation && (
-                  <Alert variant="danger">Please enter your name!</Alert>
-                )}
+                  <hr />
+                  {showValidation && (
+                    <Alert variant="danger">Please enter your name!</Alert>
+                  )}
 
-                <Form onSubmit={handleAuctioneerSubmit}>
-                  <Form.Group controlId="auctioneerName" className="mb-4">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter name"
-                      value={auctioneerName}
-                      onChange={handleNameChange}
-                    />
-                  </Form.Group>
-                  <Row>
-                    <Col>
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        disabled={isLoggingIn}
-                        className="all-button"
-                      >
-                        {isLoggingIn ? (
-                          <>
-                            <Spinner animation="border" size="sm" /> Logging
-                            in...
-                          </>
-                        ) : (
-                          "Auction Login"
-                        )}
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-          <ToastContainer position="top-right" autoClose={2000} />
-        </Row>
+                  <Form onSubmit={handleAuctioneerSubmit}>
+                    <Form.Group controlId="clerkName" className="mb-4">
+                      <Form.Label>Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter name"
+                        value={clerkName}
+                        onChange={handleNameChange}
+                      />
+                    </Form.Group>
+                    <Row>
+                      <Col>
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          disabled={isLoggingIn}
+                          className="all-button"
+                        >
+                          {isLoggingIn ? (
+                            <>
+                              <Spinner animation="border" size="sm" /> Logging
+                              in...
+                            </>
+                          ) : (
+                            "Auction Login"
+                          )}
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Card.Body>
+              </Card>
+            </Col>
+            <ToastContainer position="top-right" autoClose={2000} />
+          </Row>
+        </div>
         {/* aution model --------------------------- */}
         {userType === "Auctioneer" && (
           <Modal
@@ -224,7 +229,7 @@ const Auction = () => {
                   <Form.Label>Your Name -</Form.Label>
                   <Form.Label className="product-name">
                     {" "}
-                    {auctioneerName}
+                    {clerkName}
                   </Form.Label>
                   <Button
                     className="add-button text-white"
@@ -272,13 +277,7 @@ const Auction = () => {
                       ? handleModalSubmit
                       : handleStartButtonClick
                   }
-                  disabled={
-                    auctions.length === 0
-                      ? false
-                      : auctions[auctions.length - 1]?.buttonStatus === "Start"
-                        ? false
-                        : false
-                  }
+                  disabled={auctions.length > 0 ? false : false}
                 >
                   Start Auction
                 </Button>
@@ -288,13 +287,18 @@ const Auction = () => {
                   type="button"
                   onClick={() => handleStopButtonClick()}
                   disabled={
-                    auctions.length === 0
-                      ? false
-                      : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                        ? true
-                        : auctions[auctions.length - 1].status !== "pending" &&
-                        true
+                    auctions.length === 0 ||
+                    auctions[auctions.length - 1]?.buttonStatus === "Stop" ||
+                    auctions[auctions.length - 1].status !== "pending"
                   }
+                // disabled={
+                //   auctions.length === 0
+                //     ? false
+                //     : auctions[auctions.length - 1]?.buttonStatus === "Stop"
+                //     ? true
+                //     : auctions[auctions.length - 1].status !== "pending" &&
+                //       true
+                // }
                 >
                   Stop Auction
                 </Button>
@@ -310,7 +314,7 @@ const Auction = () => {
                 </p>
                 <hr />
                 <p className="headline-text">Bidding History</p>
-                {bidders
+                {/* {bidders
                   .filter(
                     (bid) =>
                       bid.auction_id === auctions[auctions.length - 1]?.id
@@ -324,7 +328,17 @@ const Auction = () => {
                         <p className="product-name">${data.amount}</p>
                       </div>
                     </div>
-                  ))}
+                  ))} */}
+                {filteredBidders.map((data) => (
+                  <div className="price-container" key={data.id}>
+                    <div>
+                      <p>{data.name}</p>
+                    </div>
+                    <div>
+                      <p className="product-name">${data.amount}</p>
+                    </div>
+                  </div>
+                ))}
               </Form>
             </Modal.Body>
             <Modal.Footer>
