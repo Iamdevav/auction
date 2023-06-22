@@ -28,7 +28,7 @@ const Home = () => {
                       <Button
                         variant="primary"
                         className="all-button"
-                        onClick={() => navigate("/auction")}
+                        onClick={() => navigate("/clerk")}
                       >
                         Clerk Login
                       </Button>

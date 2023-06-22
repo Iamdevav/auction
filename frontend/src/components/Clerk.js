@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 const ENDPOINT = "http://localhost:5000";
 let socket;
 
-const Auction = () => {
+const Clerk = () => {
   const [clerkName, setClerkName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [itemName, setItemName] = useState("");
@@ -227,10 +227,7 @@ const Auction = () => {
               <Form>
                 <Form.Group controlId="itemName">
                   <Form.Label>Your Name -</Form.Label>
-                  <Form.Label className="product-name">
-                    {" "}
-                    {clerkName}
-                  </Form.Label>
+                  <Form.Label className="product-name"> {clerkName}</Form.Label>
                   <Button
                     className="add-button text-white"
                     class="btn btn-outline-success"
@@ -291,14 +288,14 @@ const Auction = () => {
                     auctions[auctions.length - 1]?.buttonStatus === "Stop" ||
                     auctions[auctions.length - 1].status !== "pending"
                   }
-                // disabled={
-                //   auctions.length === 0
-                //     ? false
-                //     : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                //     ? true
-                //     : auctions[auctions.length - 1].status !== "pending" &&
-                //       true
-                // }
+                  // disabled={
+                  //   auctions.length === 0
+                  //     ? false
+                  //     : auctions[auctions.length - 1]?.buttonStatus === "Stop"
+                  //     ? true
+                  //     : auctions[auctions.length - 1].status !== "pending" &&
+                  //       true
+                  // }
                 >
                   Stop Auction
                 </Button>
@@ -308,9 +305,9 @@ const Auction = () => {
                 <p className="price-text">
                   {auctions.length !== 0 &&
                     auctions[auctions.length - 1]?.name +
-                    "  -  " +
-                    "$" +
-                    auctions[auctions.length - 1]?.price}
+                      "  -  " +
+                      "$" +
+                      auctions[auctions.length - 1]?.price}
                 </p>
                 <hr />
                 <p className="headline-text">Bidding History</p>
@@ -372,4 +369,4 @@ const Auction = () => {
   );
 };
 
-export default Auction;
+export default Clerk;
