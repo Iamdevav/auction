@@ -7,21 +7,15 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const navigate = useNavigate();
 
-  const handleAuctionClick = () => {
-    navigate("/auction");
-  };
-  const handleBidderClick = () => {
-    navigate("/bidder");
-  };
   return (
     <Container className="container-box">
-      <h1 className="heading-text">Bidding Platform</h1>
+      <h1 className="heading-text">Bidding Platform 2.0</h1>
       <div>
         <Row>
           <Col>
             <Card>
               <Card.Body>
-                <Card.Title>Choose Your Bidding Platform</Card.Title>
+                <Card.Title>Choose Your Login</Card.Title>
                 <hr />
 
                 <Form>
@@ -34,15 +28,15 @@ const Home = () => {
                       <Button
                         variant="primary"
                         className="all-button"
-                        onClick={handleAuctionClick}
+                        onClick={() => navigate("/auction")}
                       >
-                        Auction Login
+                        Clerk Login
                       </Button>
                     </Col>
                     <Col>
                       <Button
                         className="all-button"
-                        onClick={handleBidderClick}
+                        onClick={() => navigate("/bidder")}
                       >
                         Bidder Login
                       </Button>

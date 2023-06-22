@@ -72,7 +72,6 @@ const Auction = () => {
     const data = {
       name: itemName,
       price: startingPrice,
-      buttonStatus: "Start",
     };
     await api.post("auctions", data);
     setAuctionStatus(true);
@@ -150,63 +149,65 @@ const Auction = () => {
 
   return (
     <Container className="container-box">
-      <h1 className="heading-text">Bidding Platform</h1>
+      <h1 className="heading-text">Bidding Platform 2.0</h1>
 
       <div>
-        <Row>
-          <Col>
-            <Card>
-              <Card.Body>
-                <div className="back-button">
-                  <div>
-                    <Link to="/">
-                      <FaArrowLeft className="back-icon" />
-                    </Link>
+        <div className="flex-container">
+          <Row>
+            <Col>
+              <Card>
+                <Card.Body>
+                  <div className="back-button">
+                    <div>
+                      <Link to="/">
+                        <FaArrowLeft className="back-icon" />
+                      </Link>
+                    </div>
+                    <div style={{ marginLeft: "10px" }}>
+                      <Card.Title>Auctioneer Screen</Card.Title>
+                    </div>
                   </div>
-                  <div style={{ marginLeft: "10px" }}>
-                    <Card.Title>Auctioneer Screen</Card.Title>
-                  </div>
-                </div>
-                <hr />
-                {showValidation && (
-                  <Alert variant="danger">Please enter your name!</Alert>
-                )}
+                  <hr />
+                  {showValidation && (
+                    <Alert variant="danger">Please enter your name!</Alert>
+                  )}
 
-                <Form onSubmit={handleAuctioneerSubmit}>
-                  <Form.Group controlId="auctioneerName" className="mb-4">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter name"
-                      value={auctioneerName}
-                      onChange={handleNameChange}
-                    />
-                  </Form.Group>
-                  <Row>
-                    <Col>
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        disabled={isLoggingIn}
-                        className="all-button"
-                      >
-                        {isLoggingIn ? (
-                          <>
-                            <Spinner animation="border" size="sm" /> Logging
-                            in...
-                          </>
-                        ) : (
-                          "Auction Login"
-                        )}
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-          <ToastContainer position="top-right" autoClose={2000} />
-        </Row>
+                  <Form onSubmit={handleAuctioneerSubmit}>
+                    <Form.Group controlId="auctioneerName" className="mb-4">
+                      <Form.Label>Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter name"
+                        value={auctioneerName}
+                        onChange={handleNameChange}
+                      />
+                    </Form.Group>
+                    <Row>
+                      <Col>
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          disabled={isLoggingIn}
+                          className="all-button"
+                        >
+                          {isLoggingIn ? (
+                            <>
+                              <Spinner animation="border" size="sm" /> Logging
+                              in...
+                            </>
+                          ) : (
+                            "Auction Login"
+                          )}
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Card.Body>
+              </Card>
+            </Col>
+            <ToastContainer position="top-right" autoClose={2000} />
+          </Row>
+        </div>
         {/* aution model --------------------------- */}
         {userType === "Auctioneer" && (
           <Modal
@@ -272,13 +273,7 @@ const Auction = () => {
                       ? handleModalSubmit
                       : handleStartButtonClick
                   }
-                  disabled={
-                    auctions.length === 0
-                      ? false
-                      : auctions[auctions.length - 1]?.buttonStatus === "Start"
-                        ? false
-                        : false
-                  }
+                  disabled={auctions.length > 0 ? false : false}
                 >
                   Start Auction
                 </Button>
@@ -291,8 +286,8 @@ const Auction = () => {
                     auctions.length === 0
                       ? false
                       : auctions[auctions.length - 1]?.buttonStatus === "Stop"
-                        ? true
-                        : auctions[auctions.length - 1].status !== "pending" &&
+                      ? true
+                      : auctions[auctions.length - 1].status !== "pending" &&
                         true
                   }
                 >
@@ -304,9 +299,9 @@ const Auction = () => {
                 <p className="price-text">
                   {auctions.length !== 0 &&
                     auctions[auctions.length - 1]?.name +
-                    "  -  " +
-                    "$" +
-                    auctions[auctions.length - 1]?.price}
+                      "  -  " +
+                      "$" +
+                      auctions[auctions.length - 1]?.price}
                 </p>
                 <hr />
                 <p className="headline-text">Bidding History</p>
